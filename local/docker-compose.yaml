@@ -1,0 +1,144 @@
+services:
+  kafka:
+    image: confluentinc/cp-kafka:7.9.0
+    hostname: kafka
+    user: root
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_NODE_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092,CONTROLLER://kafka:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_NUM_PARTITIONS: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+      CLUSTER_ID: c3RyaW16aS10ZXN0Cg==
+    volumes:
+      - kafka_data:/tmp/kraft-combined-logs
+
+  postgres:
+    image: debezium/postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: orders_db
+      # Enable logical replication
+    command: >
+      postgres -c wal_level=logical
+               -c max_wal_senders=10
+               -c max_replication_slots=10
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  debezium:
+    image: debezium/connect:3.0.0.Final
+    hostname: debezium
+    depends_on:
+      - kafka
+      - postgres
+    ports:
+      - "8083:8083"
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: 1
+      CONFIG_STORAGE_TOPIC: my_connect_configs
+      OFFSET_STORAGE_TOPIC: my_connect_offsets
+      STATUS_STORAGE_TOPIC: my_connect_statuses
+      KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      KEY_CONVERTER_SCHEMAS_ENABLE: "false"
+      VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+
+  debezium-configurer:
+    image: curlimages/curl:latest
+    depends_on:
+      - kafka
+      - postgres
+      - debezium
+    entrypoint: |
+      sh -c '
+        echo "Waiting for Debezium to be ready..." &&
+        sleep 20 &&
+        curl -sS -w "%{http_code}" http://debezium:8083/connectors \
+          -H "Content-Type: application/json" \
+          -d @/init-connector.json -v
+      '
+    volumes:
+      - ./init-connector.json:/init-connector.json
+
+  schemaregistry:
+    image: confluentinc/cp-schema-registry:7.9.0
+    hostname: schemaregistry
+    ports:
+      - 8081:8081
+    depends_on:
+      - kafka
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
+      SCHEMA_REGISTRY_KAFKASTORE_SECURITY_PROTOCOL: PLAINTEXT
+      SCHEMA_REGISTRY_HOST_NAME: schemaregistry
+      SCHEMA_REGISTRY_LISTENERS: http://schemaregistry:8081
+      SCHEMA_REGISTRY_SCHEMA_REGISTRY_INTER_INSTANCE_PROTOCOL: "http"
+      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: INFO
+      SCHEMA_REGISTRY_KAFKASTORE_TOPIC: _schemas
+
+  # akhq:
+  #   image: tchiotludo/akhq:0.25.1
+  #   hostname: akhq
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - kafka
+  #     - schemaregistry
+  #     - debezium-configurer
+  #   environment:
+  #     AKHQ_CONFIGURATION: |
+  #       micronaut:
+  #         security:
+  #           enabled: true
+  #           token:
+  #             jwt:
+  #               signatures:
+  #                 secret:
+  #                   generator:
+  #                     secret: swordfish
+  #       akhq:
+  #         connections:
+  #           kafka-cluster:
+  #             properties.bootstrap.servers: "kafka:9092"
+  #             schema-registry.url: "http://schemaregistry:8081"
+  #             connect:
+  #               - name: "debezium-connect"
+  #                 url: "http://debezium:8083"
+
+  # The image (provectuslabs/kafka-ui) is now forked to https://github.com/kafbat/kafka-ui.
+  # Reference: https://github.com/provectus/kafka-ui/issues/4502
+  kafka-ui:
+    image: kafbat/kafka-ui:latest
+    hostname: kafbat-ui
+    ports:
+      - "8080:8080"
+    depends_on:
+      - kafka
+      - schemaregistry
+      - debezium-configurer
+    environment:
+      DYNAMIC_CONFIG_ENABLED: 'true'
+      SERVER_PORT: 8080
+      KAFKA_CLUSTERS_0_NAME: kafka-cluster
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schemaregistry:8081
+      KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME: debezium-connect
+      KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://debezium:8083
+
+volumes:
+  kafka_data:
