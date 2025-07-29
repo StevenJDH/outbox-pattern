@@ -1,0 +1,90 @@
+spring:
+  application:
+    name: outbox-pattern
+  datasource:
+    url: jdbc:postgresql://localhost:5432/orders_db
+    username: postgres
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        # Optional: Naming strategy for snake_case DB columns (default).
+        physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+  jackson:
+    default-property-inclusion: non_null
+    # Optional: Use UTC timezone for timestamps (default).
+    time-zone: UTC
+  mvc:
+    # Enables NoHandlerFoundException for 404 errors. Set also spring.web.resources.add-mappings to false.
+    throw-exception-if-no-handler-found: true
+  web:
+   resources:
+     add-mappings: false
+  lifecycle:
+    # Works with server.shutdown to define maximum time before forcing shutdown. (Default: 30s)
+    timeout-per-shutdown-phase: 30s
+
+server:
+  port: 8080
+  # Listens for shutdown signals and lets beans close properly, including connection pools. (Default: immediate)
+  shutdown: graceful
+
+management:
+  server:
+    port: 8081
+  endpoints:
+    enabled-by-default: false
+    web:
+      base-path: /actuator
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      enabled: true
+      probes:
+        enabled: true
+      show-details: always
+      group:
+        liveness:
+          include: livenessState,ping
+        readiness:
+          include: readinessState,diskSpace
+    info:
+      enabled: true
+      git:
+        enabled: true
+        mode: full
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      defaults:
+        enabled: true
+      simple:
+        enabled: true
+      prometheus:
+        enabled: true
+    enable:
+      all: false
+      jvm.memory: true
+      logback: true
+      process: true
+      system: true
+      http: true
+      jdbc: true
+      hikaricp: true
+      outboxpattern: true
+  observations:
+    enabled: true
+
+# Uncomment the below to see the SQL statements with parameter bindings.
+#logging:
+#  level:
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+#    org.hibernate.orm.jdbc.bind: TRACE

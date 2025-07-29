@@ -24,6 +24,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 nb-configuration.xml
+nbactions.*
 
 ### IntelliJ IDEA ###
 .idea
