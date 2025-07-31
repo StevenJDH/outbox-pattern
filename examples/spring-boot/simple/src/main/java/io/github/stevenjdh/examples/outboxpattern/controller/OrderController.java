@@ -2,9 +2,9 @@ package io.github.stevenjdh.examples.outboxpattern.controller;
 
 import io.github.stevenjdh.examples.outboxpattern.factory.PagedOrderResponseFactory;
 import io.github.stevenjdh.examples.outboxpattern.mapper.OrderDtoMapper;
-import io.github.stevenjdh.examples.outboxpattern.models.dto.CreateOrderRequestDTO;
-import io.github.stevenjdh.examples.outboxpattern.models.dto.OrderResponseDTO;
-import io.github.stevenjdh.examples.outboxpattern.models.dto.PagedOrderResponseDTO;
+import io.github.stevenjdh.examples.outboxpattern.dto.request.CreateOrderRequestDTO;
+import io.github.stevenjdh.examples.outboxpattern.dto.response.OrderResponseDTO;
+import io.github.stevenjdh.examples.outboxpattern.dto.response.PagedOrderResponseDTO;
 import io.github.stevenjdh.examples.outboxpattern.service.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;

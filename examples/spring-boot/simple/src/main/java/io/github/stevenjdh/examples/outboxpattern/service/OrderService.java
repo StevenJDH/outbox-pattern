@@ -12,7 +12,7 @@ package io.github.stevenjdh.examples.outboxpattern.service;
 import io.github.stevenjdh.examples.outboxpattern.factory.OrderEventFactory;
 import io.github.stevenjdh.examples.outboxpattern.mapper.OrderItemPersistenceMapper;
 import io.github.stevenjdh.examples.outboxpattern.mapper.OrderPersistenceMapper;
-import io.github.stevenjdh.examples.outboxpattern.models.Order;
+import io.github.stevenjdh.examples.outboxpattern.model.Order;
 import io.github.stevenjdh.examples.outboxpattern.repository.OrderJpaRepository;
 import io.micrometer.observation.annotation.Observed;
 import jakarta.transaction.Transactional;

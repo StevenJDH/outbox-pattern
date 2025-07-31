@@ -7,7 +7,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package io.github.stevenjdh.examples.outboxpattern.models;
+package io.github.stevenjdh.examples.outboxpattern.model;
 
 import java.util.Objects;
 

@@ -7,16 +7,8 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package io.github.stevenjdh.examples.outboxpattern.models.dto;
+package io.github.stevenjdh.examples.outboxpattern.dto.response;
 
-import java.util.List;
+import java.util.UUID;
 
-public record PagedOrderResponseDTO(
-    List<OrderResponseDTO> content,
-    int page,
-    int size,
-    long totalElements,
-    int totalPages,
-    boolean hasPrevious,
-    boolean hasNext
-) {}
+public record OrderResponseDTO(UUID orderId, String status) {}

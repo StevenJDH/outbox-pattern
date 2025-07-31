@@ -9,8 +9,8 @@
 
 package io.github.stevenjdh.examples.outboxpattern.factory;
 
-import io.github.stevenjdh.examples.outboxpattern.models.dto.OrderResponseDTO;
-import io.github.stevenjdh.examples.outboxpattern.models.dto.PagedOrderResponseDTO;
+import io.github.stevenjdh.examples.outboxpattern.dto.response.OrderResponseDTO;
+import io.github.stevenjdh.examples.outboxpattern.dto.response.PagedOrderResponseDTO;
 import org.springframework.data.domain.Page;
 
 public class PagedOrderResponseFactory {

@@ -9,7 +9,7 @@
 
 package io.github.stevenjdh.examples.outboxpattern.mapper;
 
-import io.github.stevenjdh.examples.outboxpattern.models.OrderItem;
+import io.github.stevenjdh.examples.outboxpattern.model.OrderItem;
 import io.github.stevenjdh.examples.outboxpattern.repository.entity.OrderEntity;
 import io.github.stevenjdh.examples.outboxpattern.repository.entity.OrderItemEntity;
 import java.util.UUID;

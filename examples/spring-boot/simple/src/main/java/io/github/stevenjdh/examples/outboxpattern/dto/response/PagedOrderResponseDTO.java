@@ -7,16 +7,16 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package io.github.stevenjdh.examples.outboxpattern.models.dto;
+package io.github.stevenjdh.examples.outboxpattern.dto.response;
 
-import java.time.OffsetDateTime;
-import java.util.Map;
+import java.util.List;
 
-public record ErrorResponseDTO(
-    OffsetDateTime timestamp,
-    int status,
-    String error,
-    String path,
-    String message,
-    Map<String, String> validationErrors
+public record PagedOrderResponseDTO(
+    List<OrderResponseDTO> content,
+    int page,
+    int size,
+    long totalElements,
+    int totalPages,
+    boolean hasPrevious,
+    boolean hasNext
 ) {}

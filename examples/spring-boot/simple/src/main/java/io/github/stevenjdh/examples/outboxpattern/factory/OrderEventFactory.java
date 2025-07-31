@@ -9,8 +9,8 @@
 
 package io.github.stevenjdh.examples.outboxpattern.factory;
 
-import io.github.stevenjdh.examples.outboxpattern.models.Order;
-import io.github.stevenjdh.examples.outboxpattern.models.OrderCreatedEvent;
+import io.github.stevenjdh.examples.outboxpattern.model.Order;
+import io.github.stevenjdh.examples.outboxpattern.model.OrderCreatedEvent;
 
 public class OrderEventFactory {
 

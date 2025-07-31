@@ -7,7 +7,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package io.github.stevenjdh.examples.outboxpattern.models.dto;
+package io.github.stevenjdh.examples.outboxpattern.dto.request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;

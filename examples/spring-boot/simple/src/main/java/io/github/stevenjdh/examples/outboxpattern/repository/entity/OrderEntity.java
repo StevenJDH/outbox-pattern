@@ -9,7 +9,7 @@
 
 package io.github.stevenjdh.examples.outboxpattern.repository.entity;
 
-import io.github.stevenjdh.examples.outboxpattern.models.enums.OrderStatus;
+import io.github.stevenjdh.examples.outboxpattern.enums.OrderStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -7,9 +7,10 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package io.github.stevenjdh.examples.outboxpattern.models;
+package io.github.stevenjdh.examples.outboxpattern.model;
 
-import io.github.stevenjdh.examples.outboxpattern.models.enums.OrderStatus;
+import io.github.stevenjdh.examples.outboxpattern.model.Customer;
+import io.github.stevenjdh.examples.outboxpattern.enums.OrderStatus;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;

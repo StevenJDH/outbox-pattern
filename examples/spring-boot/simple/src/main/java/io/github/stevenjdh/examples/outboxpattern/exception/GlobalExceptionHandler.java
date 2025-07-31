@@ -9,7 +9,7 @@
 
 package io.github.stevenjdh.examples.outboxpattern.exception;
 
-import io.github.stevenjdh.examples.outboxpattern.models.dto.ErrorResponseDTO;
+import io.github.stevenjdh.examples.outboxpattern.dto.response.ErrorResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.OffsetDateTime;
 import java.util.HashMap;

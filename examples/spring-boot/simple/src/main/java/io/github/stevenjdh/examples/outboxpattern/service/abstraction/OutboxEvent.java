@@ -7,7 +7,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package io.github.stevenjdh.examples.outboxpattern.models.abstraction;
+package io.github.stevenjdh.examples.outboxpattern.service.abstraction;
 
 import java.time.Instant;
 

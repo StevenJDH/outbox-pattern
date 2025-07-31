@@ -7,7 +7,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package io.github.stevenjdh.examples.outboxpattern.models.enums;
+package io.github.stevenjdh.examples.outboxpattern.enums;
 
 public enum OrderStatus {
     PLACED,

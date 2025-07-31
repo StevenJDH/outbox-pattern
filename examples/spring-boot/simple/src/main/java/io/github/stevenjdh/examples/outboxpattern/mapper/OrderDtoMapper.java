@@ -9,9 +9,9 @@
 
 package io.github.stevenjdh.examples.outboxpattern.mapper;
 
-import io.github.stevenjdh.examples.outboxpattern.models.Order;
-import io.github.stevenjdh.examples.outboxpattern.models.dto.CreateOrderRequestDTO;
-import io.github.stevenjdh.examples.outboxpattern.models.dto.OrderResponseDTO;
+import io.github.stevenjdh.examples.outboxpattern.model.Order;
+import io.github.stevenjdh.examples.outboxpattern.dto.request.CreateOrderRequestDTO;
+import io.github.stevenjdh.examples.outboxpattern.dto.response.OrderResponseDTO;
 import java.time.Instant;
 import java.util.UUID;
 import org.mapstruct.Mapper;
