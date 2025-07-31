@@ -1,6 +1,7 @@
 spring:
   application:
     name: outbox-pattern
+    solution: example
   datasource:
     url: jdbc:postgresql://localhost:5432/orders_db
     username: postgres
@@ -82,8 +83,11 @@ management:
   observations:
     enabled: true
 
+logging:
+  file:
+    # Normally something like: /usr/share/applog.
+    path: ./target/logs
 # Uncomment the below to see the SQL statements with parameter bindings.
-#logging:
 #  level:
 #    org.hibernate.SQL: DEBUG
 #    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

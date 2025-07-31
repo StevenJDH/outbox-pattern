@@ -40,6 +40,7 @@
         <!-- Dependency versions -->
         <mapstruct.version>1.6.3</mapstruct.version>
         <hypersistence-utils.version>3.9.10</hypersistence-utils.version>
+        <logback-ecs-encoder.version>1.7.0</logback-ecs-encoder.version>
         <!-- Plugin Versions -->
         <git-commit-id.version>9.0.2</git-commit-id.version>
     </properties>
@@ -93,6 +94,11 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>co.elastic.logging</groupId>
+            <artifactId>logback-ecs-encoder</artifactId>
+            <version>${logback-ecs-encoder.version}</version>
         </dependency>
         
         <dependency>

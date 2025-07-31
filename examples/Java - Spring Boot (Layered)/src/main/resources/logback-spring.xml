@@ -1,0 +1,70 @@
+<!-- 
+  You should have received a copy of the GNU General Public License
+  along with Covid Tracker.  If not, see <http://www.gnu.org/licenses/>.
+  
+  This file is part of Outbox Pattern <https://github.com/StevenJDH/outbox-pattern>.
+  Copyright (c) 2025 Steven Jenkins De Haro
+  
+  This source code is licensed under the MIT license found in the
+  LICENSE file in the root directory of this source tree or at
+  https://opensource.org/licenses/MIT.
+-->
+<configuration debug="false" scan="false" scanPeriod="60 seconds">
+    <!-- Dynamically enriched custom field. -->
+    <springProperty scope="context" name="SERVICE_NAME" source="spring.application.name"/>
+    <springProperty scope="context" name="SOLUTION_NAME" source="spring.application.solution"/>
+    <springProperty scope="context" name="ENVIRONMENT" source="spring.profiles.active" defaultValue="local" />
+    
+    <!-- Overloads for appenders. -->
+    <property name="LOG_FILE" value="${LOG_PATH:-${java.io.tmpdir:-/tmp}}/${SERVICE_NAME:-spring}.log"/>
+    
+    <!-- Adds the default console appenders for Spring Cloud. -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml"/>
+
+    <appender name="ECS_JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder class="co.elastic.logging.logback.EcsEncoder">
+            <serviceName>${SERVICE_NAME:-spring-boot-application}</serviceName>
+            <serviceEnvironment>${ENVIRONMENT}</serviceEnvironment>
+            <serviceNodeName>${HOSTNAME}</serviceNodeName>
+            <additionalField>
+                <key>process.pid</key>
+                <value>${PID}</value>
+            </additionalField>
+            <additionalField>
+                <key>project</key>
+                <value>Outbox Demo</value>
+            </additionalField>
+            <additionalField>
+                <key>solution</key>
+                <value>${SOLUTION_NAME:-maven-project}</value>
+            </additionalField>
+        </encoder>
+        <file>${LOG_FILE}.json</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <cleanHistoryOnStart>${LOG_FILE_CLEAN_HISTORY_ON_START:-false}</cleanHistoryOnStart>
+            <fileNamePattern>${ROLLING_FILE_NAME_PATTERN:-${LOG_FILE}.json.%d{yyyy-MM-dd}.%i.gz}</fileNamePattern>
+            <maxFileSize>${LOG_FILE_MAX_SIZE:-10MB}</maxFileSize>
+            <maxHistory>${LOG_FILE_MAX_HISTORY:-7}</maxHistory>
+            <totalSizeCap>${LOG_FILE_TOTAL_SIZE_CAP:-0}</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    
+    <springProfile name="(default | local)">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <!-- Uncomment this to log json to file.
+            <appender-ref ref="ECS_JSON_FILE"/>
+            -->
+        </root>
+    </springProfile>
+    
+    <springProfile name="!(default | local)">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ECS_JSON_FILE"/>
+        </root>
+    </springProfile>
+</configuration>
