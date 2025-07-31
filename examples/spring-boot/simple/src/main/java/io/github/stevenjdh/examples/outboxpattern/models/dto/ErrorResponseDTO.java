@@ -1,0 +1,22 @@
+/*
+ * This file is part of Outbox Pattern <https://github.com/StevenJDH/outbox-pattern>.
+ * Copyright (c) 2025 Steven Jenkins De Haro
+ * 
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree or at
+ * https://opensource.org/licenses/MIT.
+ */
+
+package io.github.stevenjdh.examples.outboxpattern.models.dto;
+
+import java.time.OffsetDateTime;
+import java.util.Map;
+
+public record ErrorResponseDTO(
+    OffsetDateTime timestamp,
+    int status,
+    String error,
+    String path,
+    String message,
+    Map<String, String> validationErrors
+) {}
