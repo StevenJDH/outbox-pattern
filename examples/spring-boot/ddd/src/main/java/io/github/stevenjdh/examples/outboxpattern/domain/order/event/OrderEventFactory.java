@@ -10,7 +10,6 @@
 package io.github.stevenjdh.examples.outboxpattern.domain.order.event;
 
 import io.github.stevenjdh.examples.outboxpattern.domain.order.aggregate.OrderAggregate;
-import io.github.stevenjdh.examples.outboxpattern.domain.order.event.OrderCreatedEvent;
 
 public class OrderEventFactory {
 

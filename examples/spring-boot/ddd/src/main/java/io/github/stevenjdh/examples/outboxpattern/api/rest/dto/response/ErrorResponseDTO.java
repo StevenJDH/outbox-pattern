@@ -13,10 +13,10 @@ import java.time.OffsetDateTime;
 import java.util.Map;
 
 public record ErrorResponseDTO(
-        OffsetDateTime timestamp,
-        int status,
-        String error,
-        String path,
-        String message,
-        Map<String, String> validationErrors
+    OffsetDateTime timestamp,
+    int status,
+    String error,
+    String path,
+    String message,
+    Map<String, String> validationErrors
 ) {}

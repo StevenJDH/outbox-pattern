@@ -88,7 +88,7 @@ public class GlobalExceptionHandler {
                                                                 HttpServletRequest request,
                                                                 Map<String, String> validationErrors) {
 
-        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+        var errorResponse = new ErrorResponseDTO(
                 OffsetDateTime.now(),
                 status.value(),
                 status.getReasonPhrase(),

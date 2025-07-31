@@ -11,7 +11,6 @@ package io.github.stevenjdh.examples.outboxpattern.infrastructure.persistence.ad
 
 import io.github.stevenjdh.examples.outboxpattern.domain.order.aggregate.OrderAggregate;
 import io.github.stevenjdh.examples.outboxpattern.domain.order.repository.OrderRepository;
-import io.github.stevenjdh.examples.outboxpattern.infrastructure.persistence.entity.OrderEntity;
 import io.github.stevenjdh.examples.outboxpattern.infrastructure.persistence.mapper.OrderItemPersistenceMapper;
 import io.github.stevenjdh.examples.outboxpattern.infrastructure.persistence.mapper.OrderPersistenceMapper;
 import io.github.stevenjdh.examples.outboxpattern.infrastructure.persistence.repository.OrderJpaRepository;
@@ -39,8 +38,8 @@ public class OrderJpaRepositoryAdapter implements OrderRepository  {
     @Override
     @Observed(name = "outboxpattern.order.repository", contextualName = "saveOrder")
     public OrderAggregate save(OrderAggregate orderAggregate) {
-        OrderEntity entity = orderMapper.toEntity(orderAggregate, itemMapper);
-        OrderEntity savedEntity = repository.save(entity);
+        var entity = orderMapper.toEntity(orderAggregate, itemMapper);
+        var savedEntity = repository.save(entity);
         return orderMapper.toAggregate(savedEntity);
     }
 
