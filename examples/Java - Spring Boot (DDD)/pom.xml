@@ -43,6 +43,7 @@
         <logback-ecs-encoder.version>1.7.0</logback-ecs-encoder.version>
         <!-- Plugin Versions -->
         <git-commit-id.version>9.0.2</git-commit-id.version>
+        <maven-enforcer.version>3.6.1</maven-enforcer.version>
     </properties>
     
     <dependencies>
@@ -146,6 +147,36 @@
                         <excludeProperty>^git.commit.message.(short|full)$</excludeProperty>
                     </excludeProperties>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${maven-enforcer.version}</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>[21.0,)</version>
+                                </requireJavaVersion>
+                                <requireJavaVendor>
+                                    <level>WARN</level>
+                                    <includes>
+                                        <include>Eclipse Adoptium</include>
+                                    </includes>
+                                </requireJavaVendor>
+                                <requireMavenVersion>
+                                    <level>WARN</level>
+                                    <version>[3.9.5,)</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
