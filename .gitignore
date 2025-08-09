@@ -15,11 +15,11 @@ pom.xml.versionsBackup
 release.properties
 
 ### NetBeans ###
-/nbproject/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+nbproject/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
