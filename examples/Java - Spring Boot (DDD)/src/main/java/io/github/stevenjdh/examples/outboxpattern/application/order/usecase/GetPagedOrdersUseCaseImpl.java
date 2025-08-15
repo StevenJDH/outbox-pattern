@@ -30,7 +30,7 @@ public class GetPagedOrdersUseCaseImpl implements GetPagedOrdersUseCase {
 
     @Override
     public Page<OrderAggregate> getPagedOrders(Pageable pageable) {
-        LOG.info("Retrieving the first [{}] orders from page [{}]...", pageable.getPageSize(),
+        LOG.info("Retrieving [{}] order(s) from page [{}]...", pageable.getPageSize(),
                 pageable.getPageNumber());
         
         var pagedOrders = orderRepository.getOrders(pageable);
