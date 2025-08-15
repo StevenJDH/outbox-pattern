@@ -34,12 +34,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/orders",
+					"raw": "http://localhost:9080/api/v1/orders",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "9080",
 					"path": [
 						"api",
 						"v1",
@@ -71,12 +71,12 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/orders?page=0&size=2",
+					"raw": "http://localhost:9080/api/v1/orders?page=0&size=2",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "9080",
 					"path": [
 						"api",
 						"v1",
@@ -97,7 +97,7 @@
 			"response": []
 		},
 		{
-			"name": "/actuator/info",
+			"name": "/management/health",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -105,37 +105,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/actuator/info",
+					"raw": "http://localhost:9081/management/health",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8081",
+					"port": "9081",
 					"path": [
-						"actuator",
-						"info"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/actuator/health",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8081/actuator/health",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"actuator",
+						"management",
 						"health"
 					]
 				}
@@ -143,7 +120,7 @@
 			"response": []
 		},
 		{
-			"name": "/actuator/health/readiness",
+			"name": "/management/health/readiness",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -151,14 +128,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/actuator/health/readiness",
+					"raw": "http://localhost:9081/management/health/readiness",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8081",
+					"port": "9081",
 					"path": [
-						"actuator",
+						"management",
 						"health",
 						"readiness"
 					]
@@ -167,7 +144,7 @@
 			"response": []
 		},
 		{
-			"name": "/actuator/health/liveness",
+			"name": "/management/health/liveness",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -175,14 +152,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/actuator/health/liveness",
+					"raw": "http://localhost:9081/management/health/liveness",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8081",
+					"port": "9081",
 					"path": [
-						"actuator",
+						"management",
 						"health",
 						"liveness"
 					]
@@ -191,7 +168,7 @@
 			"response": []
 		},
 		{
-			"name": "/actuator/metrics",
+			"name": "/management/info",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -199,14 +176,37 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/actuator/metrics",
+					"raw": "http://localhost:9081/management/info",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8081",
+					"port": "9081",
 					"path": [
-						"actuator",
+						"management",
+						"info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/management/metrics (SB Only)",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9081/management/metrics",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9081",
+					"path": [
+						"management",
 						"metrics"
 					]
 				}
@@ -214,7 +214,7 @@
 			"response": []
 		},
 		{
-			"name": "/actuator/prometheus",
+			"name": "/management/prometheus",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -222,14 +222,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/actuator/prometheus",
+					"raw": "http://localhost:9081/management/prometheus",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8081",
+					"port": "9081",
 					"path": [
-						"actuator",
+						"management",
 						"prometheus"
 					]
 				}
