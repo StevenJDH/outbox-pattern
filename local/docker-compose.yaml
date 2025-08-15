@@ -37,7 +37,7 @@ services:
                -c max_wal_senders=10
                -c max_replication_slots=10
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ${INIT_SCRIPT-./init.sql}:/docker-entrypoint-initdb.d/init.sql
 
   debezium:
     image: debezium/connect:3.0.0.Final

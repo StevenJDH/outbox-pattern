@@ -30,7 +30,7 @@ nerdctl/docker build -t debezium-connect . [--build-arg STRIMZI_VERSION=latest-k
 #### Makefie
 
 ```bash
-make start
+make start [app=quarkus]
 make logs [name=<kafka|postgres|debezium|debezium-configurer|kafka-ui>]
 make stop
 ```
@@ -38,7 +38,7 @@ make stop
 #### Docker Compose
 
 ```bash
-docker-compose up -d
+docker-compose [--env-file ./quarkus.env] up -d
 docker-compose logs [kafka|postgres|debezium|debezium-configurer|kafka-ui]
 docker-compose down
 mvn spring-boot:run -f ....
