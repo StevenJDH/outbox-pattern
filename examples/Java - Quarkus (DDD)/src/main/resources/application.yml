@@ -58,7 +58,10 @@ quarkus:
       prometheus:
         enabled: true
         path: /management/prometheus
-
+  native:
+    resources:
+      includes: git.properties
+  
   live-reload:
     enabled: false
   devservices:

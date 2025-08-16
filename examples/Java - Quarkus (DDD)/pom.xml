@@ -30,6 +30,7 @@
         <maven.compiler.showWarnings>true</maven.compiler.showWarnings>
         <argLine>-Dfile.encoding=${project.build.sourceEncoding}</argLine>
         <skipITs>true</skipITs>
+        <skipGitCommitId>false</skipGitCommitId>
         <!-- Dependency versions -->
         <quarkus.platform.version>3.21.4</quarkus.platform.version>
         <mapstruct.version>1.6.3</mapstruct.version>
@@ -218,6 +219,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <skip>${skipGitCommitId}</skip>
                     <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
                     <format>properties</format>
@@ -258,6 +260,7 @@
                                     <includes>
                                         <!-- graalvm-jdk -->
                                         <include>Oracle Corporation</include>
+                                        <include>GraalVM Community</include>
                                     </includes>
                                 </requireJavaVendor>
                                 <requireMavenVersion>

@@ -25,17 +25,23 @@ services:
 
   postgres:
     image: debezium/postgres:15
+    hostname: postgres
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: orders_db
-      # Enable logical replication
+    # Enables logical replication.
     command: >
       postgres -c wal_level=logical
                -c max_wal_senders=10
                -c max_replication_slots=10
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d orders_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
       - ${INIT_SCRIPT-./init.sql}:/docker-entrypoint-initdb.d/init.sql
 
@@ -139,6 +145,21 @@ services:
       KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schemaregistry:8081
       KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME: debezium-connect
       KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://debezium:8083
+
+  # outbox-pattern:
+  #   image: stevenjdh/outbox-pattern
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     debezium-configurer:
+  #       condition: service_started
+  #   ports:
+  #     - "9080:9080"
+  #     - "9081:9081"
+  #   environment:
+  #     QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/orders_db
+  #     QUARKUS_DATASOURCE_USERNAME: postgres
+  #     QUARKUS_DATASOURCE_PASSWORD: password
 
 volumes:
   kafka_data:
