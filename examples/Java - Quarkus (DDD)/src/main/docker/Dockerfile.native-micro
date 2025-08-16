@@ -1,0 +1,36 @@
+####
+# This Dockerfile is used in order to build a container that runs the Quarkus application in native (no JVM) mode.
+# It uses a micro base image, tuned for Quarkus native executables.
+# It reduces the size of the resulting container image.
+# Check https://quarkus.io/guides/quarkus-runtime-base-image for further information about this image.
+#
+# Before building the container image run:
+#
+# ./mvnw package -Dnative
+#
+# Then, build the image with:
+#
+# docker build -f src/main/docker/Dockerfile.native-micro -t stevenjdh/outbox-pattern .
+#
+# Then run the container using:
+#
+# docker run -i --rm \
+#     -e QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://host.docker.internal:5432/orders_db  \
+#     -e QUARKUS_DATASOURCE_USERNAME=postgres \
+#     -e QUARKUS_DATASOURCE_PASSWORD=password \
+#     -p 9080:9080 -p 9081:9081 \
+#     stevenjdh/outbox-pattern
+#
+# The `quay.io/quarkus/quarkus-micro-image:2.0` base image is based on UBI 9.
+###
+FROM quay.io/quarkus/quarkus-micro-image:2.0
+WORKDIR /work/
+RUN chown 1001 /work \
+    && chmod "g+rwX" /work \
+    && chown 1001:root /work
+COPY --chown=1001:root --chmod=0755 target/*-runner /work/application
+
+EXPOSE 9080 9081
+USER 1001
+
+ENTRYPOINT ["./application", "-Dquarkus.http.host=0.0.0.0"]
