@@ -11,6 +11,7 @@
 # Build the container image with:
 #
 # docker build -f src/main/docker/Dockerfile.native-micro-multistage -t stevenjdh/outbox-pattern .
+# NOTE: Execute 'mvnw git-commit-id:revision' to pre-generate git.properties before running command above.
 #
 # Then run the container using:
 #
@@ -32,7 +33,6 @@ USER quarkus
 WORKDIR /code
 RUN ./mvnw -B org.apache.maven.plugins:maven-dependency-plugin:3.8.1:go-offline
 COPY src /code/src
-# Execute 'mvnw git-commit-id:revision' to pre-generate git.properties before running docker build.
 COPY target/classes/git.properties /code/target/classes/git.properties
 RUN ./mvnw -B package -Dnative -DskipTests -DskipITs=false -DskipGitCommitId=true
 
