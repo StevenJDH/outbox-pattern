@@ -68,3 +68,57 @@ quarkus:
     enabled: false
   test:
     continuous-testing: disabled
+  
+  log:
+    level: INFO
+    console:
+      enable: true
+      format: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p %i --- ${quarkus.application.name:quarkus-application} [%20.20t] ${LOG_CORRELATION_PATTERN:-} %-25.25c{1} : %s%n%e"
+      color: true
+      json:
+        enabled: false
+    file:
+      enable: true
+      # Newline is at the end because this is the default delimiter.
+      format: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p %i --- ${quarkus.application.name:quarkus-application} [%20.20t] ${LOG_CORRELATION_PATTERN:-} %-25.25c{1} : %s%e%n"
+      # Normally something like: /usr/share/applog, but leaving default path because changes
+      # seem to only apply later in the execution chain in Quarkus.
+      path: ./target/quarkus.log
+      rotation:
+        max-file-size: 10M
+        max-backup-index: 7
+        rotate-on-boot: false
+        file-suffix: ".yyyy-MM-dd"
+      encoding: UTF-8
+      json:
+        # Quarkus has quarkus-logging-json for JSON logs. It's JSON log file appender is
+        # similar to the ECS encoder, but it's not ECS out-of-the-box, just very similar.
+        # Using io.quarkiverse.logging.logback:quarkus-logging-logback with the ECS encoder
+        # is too much of a pain in Quarkus, and it has several limitations.
+        enabled: true
+        log-format: ecs
+        zone-id: UTC
+        additional-field:
+          project:
+            value: Outbox Demo
+          solution:
+            value: Example
+
+"%dev":
+  quarkus:
+    log:
+      file:
+        json:
+          enabled: false
+"%test":
+  quarkus:
+    log:
+      file:
+        json:
+          enabled: false
+"%local":
+  quarkus:
+    log:
+      file:
+        json:
+          enabled: false
