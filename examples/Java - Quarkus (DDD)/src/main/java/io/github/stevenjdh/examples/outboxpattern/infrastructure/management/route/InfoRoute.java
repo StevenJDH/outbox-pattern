@@ -41,8 +41,8 @@ public class InfoRoute {
         mi.router()
                 .get(String.format("%s/info", basePath))
                 .handler(rc -> rc.response()
-                .putHeader("Content-Type", "application/json;charset=UTF-8")
-                .end(loadGitInfo()));
+                    .putHeader("Content-Type", "application/json;charset=UTF-8")
+                        .end(loadGitInfo()));
     }
 
     private String loadGitInfo() {
@@ -64,7 +64,7 @@ public class InfoRoute {
                 throw new IOException("The git.properties file was not found in classpath.");
             }
             
-            Properties props = new Properties();
+            var props = new Properties();
             props.load(is);
             
             return props;
