@@ -32,7 +32,14 @@
         <skipITs>true</skipITs>
         <skipGitCommitId>false</skipGitCommitId>
         <!-- Dependency versions -->
-        <quarkus.platform.version>3.21.4</quarkus.platform.version>
+        <!-- 
+            The debezium-quarkus-outbox dependency is incompatible with Hibernate 7,
+            which was introduced with the Quarkus 3.24 release. A ticket for the
+            NoSuchMethodError with Hibernate 7 is being worked on. Version 3.3.x of
+            debezium-quarkus-outbox will likely have the fix.
+            Reference: https://issues.redhat.com/browse/DBZ-9193
+        -->
+        <quarkus.platform.version>3.23.4</quarkus.platform.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <assertj-core.version>3.27.4</assertj-core.version>
         <!-- Plugin Versions -->
@@ -114,16 +121,23 @@
             <artifactId>quarkus-smallrye-health</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-observation</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-micrometer-registry-prometheus</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-logging-json</artifactId>
+        </dependency>
+        <!-- 
+            If you want to use Zipkin directly without an OTEL collector, then place
+            the opentelemetry-bom in dependenecy management, and add the
+            opentelemetry-exporter-zipkin dependency. Finally, set the following properties:
+                quarkus.otel.traces.exporter=zipkin and
+                quarkus.otel.exporter.zipkin.endpoint=http://localhost:9412/api/v2/spans
+        -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-opentelemetry</artifactId>
         </dependency>
 
         <dependency>

@@ -14,6 +14,7 @@ import io.github.stevenjdh.examples.outboxpattern.domain.order.aggregate.OrderAg
 import io.github.stevenjdh.examples.outboxpattern.domain.order.repository.OrderRepository;
 import io.github.stevenjdh.examples.outboxpattern.domain.order.usecase.PlaceOrderUseCase;
 import io.github.stevenjdh.examples.outboxpattern.domain.shared.event.OutboxEventPublisher;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -34,6 +35,7 @@ public class PlaceOrderUseCaseImpl implements PlaceOrderUseCase {
     }
 
     @Override
+    @WithSpan
     @Transactional
     public OrderAggregate addOrder(OrderAggregate order) {
         order.updateTotalNumberOfItems();

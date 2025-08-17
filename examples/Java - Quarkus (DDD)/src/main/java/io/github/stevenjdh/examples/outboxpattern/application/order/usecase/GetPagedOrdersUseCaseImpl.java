@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.github.stevenjdh.examples.outboxpattern.domain.order.usecase.GetPagedOrdersUseCase;
 import io.github.stevenjdh.examples.outboxpattern.shared.pagination.PagedResult;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -31,6 +32,7 @@ public class GetPagedOrdersUseCaseImpl implements GetPagedOrdersUseCase {
     }
 
     @Override
+    @WithSpan
     public PagedResult<OrderAggregate> getPagedOrders(Page page) {
         LOG.info("Retrieving [{}] order(s) from page [{}]...", page.size,
                 page.index);

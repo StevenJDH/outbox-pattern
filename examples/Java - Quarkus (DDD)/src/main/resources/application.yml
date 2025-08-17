@@ -12,6 +12,9 @@ quarkus:
       url: jdbc:postgresql://localhost:5432/orders_db
   http:
     port: 9080
+    access-log:
+      enabled: false
+      pattern: "%h %l %u %t \"%r\" %s %b %{X,traceId} %{X,spanId}"
   shutdown:
     # Define maximum time before forcing shutdown after Listening for shutdown
     # signals and lets beans close properly, including connection pools. (Default: 0S).
@@ -58,6 +61,15 @@ quarkus:
       prometheus:
         enabled: true
         path: /management/prometheus
+  otel:
+    enabled: true
+    exporter:
+      otlp:
+        endpoint: http://localhost:4317
+        protocol: grpc
+    propagators: tracecontext,baggage
+    resource:
+      attributes: foobar=example,deployment.environment=${quarkus.profile:local}
   native:
     resources:
       includes: git.properties
@@ -73,14 +85,13 @@ quarkus:
     level: INFO
     console:
       enable: true
-      format: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p %i --- ${quarkus.application.name:quarkus-application} [%20.20t] ${LOG_CORRELATION_PATTERN:-} %-25.25c{1} : %s%n%e"
+      format: ${log.pattern}
       color: true
       json:
         enabled: false
     file:
       enable: true
-      # Newline is at the end because this is the default delimiter.
-      format: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p %i --- ${quarkus.application.name:quarkus-application} [%20.20t] ${LOG_CORRELATION_PATTERN:-} %-25.25c{1} : %s%e%n"
+      format: ${log.pattern}
       # Normally something like: /usr/share/applog, but leaving default path because changes
       # seem to only apply later in the execution chain in Quarkus.
       path: ./target/quarkus.log
@@ -103,6 +114,8 @@ quarkus:
             value: Outbox Demo
           solution:
             value: Example
+log:
+  pattern: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p %i --- ${quarkus.application.name:quarkus-application} [%X{traceId},%X{spanId},%X{X-Correlation-Id}] [%20.20t] ${LOG_CORRELATION_PATTERN:-} %-25.25c{1} : %s%n%e"
 
 "%dev":
   quarkus:
