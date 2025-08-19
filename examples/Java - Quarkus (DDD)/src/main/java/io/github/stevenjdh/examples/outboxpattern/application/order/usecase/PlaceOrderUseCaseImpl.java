@@ -35,7 +35,7 @@ public class PlaceOrderUseCaseImpl implements PlaceOrderUseCase {
     }
 
     @Override
-    @WithSpan
+    @WithSpan("add-order")
     @Transactional
     public OrderAggregate addOrder(OrderAggregate order) {
         order.updateTotalNumberOfItems();

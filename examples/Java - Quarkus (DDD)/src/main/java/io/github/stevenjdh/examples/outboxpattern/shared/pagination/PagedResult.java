@@ -11,7 +11,7 @@ package io.github.stevenjdh.examples.outboxpattern.shared.pagination;
 
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 
 public record PagedResult<T>(
     List<T> content,
@@ -30,7 +30,7 @@ public record PagedResult<T>(
                 .map(converter)
                 // Using this instead of toList() because it will preserve type inferred by map()
                 // and remove the need for casting and having an unchecked cast warning.
-                .collect(Collectors.toList());
+                .collect(toList());
         
         return new PagedResult<>(
             mappedContent,

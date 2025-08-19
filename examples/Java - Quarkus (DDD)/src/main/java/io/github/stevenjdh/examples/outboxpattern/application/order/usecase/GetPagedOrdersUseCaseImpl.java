@@ -32,7 +32,7 @@ public class GetPagedOrdersUseCaseImpl implements GetPagedOrdersUseCase {
     }
 
     @Override
-    @WithSpan
+    @WithSpan("get-paged-orders")
     public PagedResult<OrderAggregate> getPagedOrders(Page page) {
         LOG.info("Retrieving [{}] order(s) from page [{}]...", page.size,
                 page.index);

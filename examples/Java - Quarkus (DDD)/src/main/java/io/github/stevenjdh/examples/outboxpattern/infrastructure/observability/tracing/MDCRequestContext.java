@@ -19,6 +19,9 @@ import org.jboss.logging.MDC;
  * new entries, and only removes them when the request has fully completed. This
  * ensures that the values are still available in other areas that come later in
  * the request life cycle, like the access logs.
+ * 
+ * NOTE: This is only required in Quarkus, because Spring Boot Filters already hook
+ * into the full life cycle of a request, so cleanup can happen there directly.
  */
 @RequestScoped
 public class MDCRequestContext implements AutoCloseable {

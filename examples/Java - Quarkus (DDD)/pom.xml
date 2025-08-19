@@ -188,6 +188,8 @@
                     <parameters>true</parameters>
                     <release>${java.version}</release>
                     <compilerArgument>-Xlint:unchecked</compilerArgument>
+                    <!-- Suppresses annotation processing warning message. -->
+                    <compilerArgument>-Xlint:-options</compilerArgument>
                 </configuration>
             </plugin>
             <plugin>
