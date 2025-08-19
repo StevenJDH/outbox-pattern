@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import io.github.stevenjdh.examples.outboxpattern.domain.order.usecase.GetPagedOrdersUseCase;
+import io.micrometer.tracing.annotation.NewSpan;
 
 @Service
 public class GetPagedOrdersUseCaseImpl implements GetPagedOrdersUseCase {
@@ -29,6 +30,7 @@ public class GetPagedOrdersUseCaseImpl implements GetPagedOrdersUseCase {
     }
 
     @Override
+    @NewSpan
     public Page<OrderAggregate> getPagedOrders(Pageable pageable) {
         LOG.info("Retrieving [{}] order(s) from page [{}]...", pageable.getPageSize(),
                 pageable.getPageNumber());
