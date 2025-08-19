@@ -68,8 +68,12 @@ quarkus:
         endpoint: http://localhost:4317
         protocol: grpc
     propagators: tracecontext,baggage
+    traces:
+      sampler:
+        # Sample 100% of traces (good for dev/demo).
+        arg: 1.0d
     resource:
-      attributes: foobar=example,deployment.environment=${quarkus.profile:local}
+      attributes: foobar=example,service.environment=${quarkus.profile:local}
   native:
     resources:
       includes: git.properties
@@ -85,13 +89,13 @@ quarkus:
     level: INFO
     console:
       enable: true
-      format: ${log.pattern}
+      format: ${logging.pattern.console}
       color: true
       json:
         enabled: false
     file:
       enable: true
-      format: ${log.pattern}
+      format: ${logging.pattern.file}
       # Normally something like: /usr/share/applog, but leaving default path because changes
       # seem to only apply later in the execution chain in Quarkus.
       path: ./target/quarkus.log
@@ -99,7 +103,7 @@ quarkus:
         max-file-size: 10M
         max-backup-index: 7
         rotate-on-boot: false
-        file-suffix: ".yyyy-MM-dd"
+        file-suffix: ".yyyy-MM-dd.gz"
       encoding: UTF-8
       json:
         # Quarkus has quarkus-logging-json for JSON logs. It's JSON log file appender is
@@ -114,8 +118,14 @@ quarkus:
             value: Outbox Demo
           solution:
             value: Example
-log:
-  pattern: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p %i --- ${quarkus.application.name:quarkus-application} [%X{traceId},%X{spanId},%X{X-Correlation-Id}] [%20.20t] ${LOG_CORRELATION_PATTERN:-} %-25.25c{1} : %s%n%e"
+logging:
+  pattern:
+    base: "%d{${logging.pattern.dateformat}} %5p %i --- [${quarkus.application.name}] [%20.20t] ${logging.pattern.correlation}%-40.40c{.1} : %s%n%e"
+    console: ${logging.pattern.base}
+    file: ${logging.pattern.base}
+    dateformat: "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+    # Has a trailing space so that it is separated from the thread name that comes right after it by default.
+    correlation: "[%X{traceId},%X{spanId},%X{X-Correlation-Id}] "
 
 "%dev":
   quarkus:
