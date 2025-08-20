@@ -14,7 +14,7 @@ quarkus:
     port: 9080
     access-log:
       enabled: false
-      pattern: "%h %l %u %t \"%r\" %s %b %{X,traceId} %{X,spanId}"
+      pattern: "[Date: %{time,${logging.pattern.dateformat}}] [IP: %h] [Url: %r] [Status: %s] [Bytes: %b] [TraceId: %{X,traceId}] [SpanId: %{X,spanId}]"
   shutdown:
     # Define maximum time before forcing shutdown after Listening for shutdown
     # signals and lets beans close properly, including connection pools. (Default: 0S).
@@ -51,8 +51,8 @@ quarkus:
     port: 9081
     root-path: /management
   smallrye-health:
-    liveness-path: /management/health/liveness
-    readiness-path: /management/health/readiness
+    liveness-path: ${quarkus.management.root-path}/health/liveness
+    readiness-path: ${quarkus.management.root-path}/health/readiness
   micrometer:
     enabled: true
     registry-enabled-default: true
@@ -60,13 +60,14 @@ quarkus:
     export:
       prometheus:
         enabled: true
-        path: /management/prometheus
+        path: ${quarkus.management.root-path}/prometheus
   otel:
     enabled: true
     exporter:
       otlp:
         endpoint: http://localhost:4317
         protocol: grpc
+    # Opted to not support legacy B3 standard.
     propagators: tracecontext,baggage
     traces:
       sampler:
@@ -120,11 +121,13 @@ quarkus:
             value: Example
 logging:
   pattern:
-    base: "%d{${logging.pattern.dateformat}} %5p %i --- [${quarkus.application.name}] [%20.20t] ${logging.pattern.correlation}%-40.40c{.1} : %s%n%e"
+    base: "%d{${logging.pattern.dateformat}} %5p %i --- [${quarkus.application.name}] [%20.20t] ${logging.pattern.correlation}%-40.40c{1.} : %s%n%e"
     console: ${logging.pattern.base}
     file: ${logging.pattern.base}
+    # Start the application with -Duser.timezone=UTC to see console logs in UTC.
     dateformat: "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
     # Has a trailing space so that it is separated from the thread name that comes right after it by default.
+    # NOTE: There is also %X{parentId} and %X{sampled} available.
     correlation: "[%X{traceId},%X{spanId},%X{X-Correlation-Id}] "
 
 "%dev":

@@ -30,7 +30,6 @@ import org.springframework.stereotype.Component;
  * # the log entry 'Will propagate new baggage context for entries {}'.
  * Reference (Maybe): https://github.com/micrometer-metrics/tracing/issues/933
  */
-
 @Component
 public class BaggageSpanEnricherFilter implements Filter {
     
@@ -61,5 +60,4 @@ public class BaggageSpanEnricherFilter implements Filter {
         
         chain.doFilter(request, response);
     }
-
 }

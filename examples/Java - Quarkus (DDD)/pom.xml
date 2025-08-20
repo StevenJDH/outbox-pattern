@@ -128,13 +128,6 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-logging-json</artifactId>
         </dependency>
-        <!-- 
-            If you want to use Zipkin directly without an OTEL collector, then place
-            the opentelemetry-bom in dependenecy management, and add the
-            opentelemetry-exporter-zipkin dependency. Finally, set the following properties:
-                quarkus.otel.traces.exporter=zipkin and
-                quarkus.otel.exporter.zipkin.endpoint=http://localhost:9412/api/v2/spans
-        -->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-opentelemetry</artifactId>
