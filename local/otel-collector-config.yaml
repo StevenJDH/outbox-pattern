@@ -10,7 +10,18 @@ exporters:
   zipkin:
     endpoint: "http://zipkin:9411/api/v2/spans"
 
+extensions:
+  health_check:
+    endpoint: "0.0.0.0:13133"
+    path: "/health"
+    # For otel/opentelemetry-collector version 0.133 and newer (maybe).
+    # CheckCollectorPipeline:
+    #   Enabled: true
+    #   Interval: 5s
+    #   ExporterFailureThreshold: 1
+
 service:
+  extensions: [health_check]
   pipelines:
     traces:
       receivers: [otlp]

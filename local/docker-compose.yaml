@@ -20,6 +20,12 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
       CLUSTER_ID: c3RyaW16aS10ZXN0Cg==
+    healthcheck:
+      test: ["CMD-SHELL", "bash", "-c", "/usr/bin/kafka-broker-api-versions --bootstrap-server localhost:9092 > /dev/null 2>&1"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 30s
     volumes:
       - kafka_data:/tmp/kraft-combined-logs
 
@@ -38,7 +44,7 @@ services:
                -c max_wal_senders=10
                -c max_replication_slots=10
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d orders_db"]
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "orders_db"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -49,8 +55,8 @@ services:
     image: debezium/connect:3.0.0.Final
     hostname: debezium
     depends_on:
-      - kafka
-      - postgres
+      kafka:
+        condition: service_healthy
     ports:
       - "8083:8083"
     environment:
@@ -63,17 +69,24 @@ services:
       VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
       KEY_CONVERTER_SCHEMAS_ENABLE: "false"
       VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://debezium:8083/connectors"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
 
   debezium-configurer:
-    image: curlimages/curl:latest
+    image: curlimages/curl:8.15.0
     depends_on:
-      - kafka
-      - postgres
-      - debezium
+      postgres:
+        condition: service_healthy
+      debezium:
+        condition: service_healthy
+    restart: on-failure
     entrypoint: |
       sh -c '
-        echo "Waiting for Debezium to be ready..." &&
-        sleep 20 &&
+        echo "Debezium is healthy, configuring connector..." &&
         curl -sS -w "%{http_code}" http://debezium:8083/connectors \
           -H "Content-Type: application/json" \
           -d @/init-connector.json -v
@@ -85,9 +98,10 @@ services:
     image: confluentinc/cp-schema-registry:7.9.0
     hostname: schemaregistry
     ports:
-      - 8081:8081
+      - "8081:8081"
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
     environment:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
       SCHEMA_REGISTRY_KAFKASTORE_SECURITY_PROTOCOL: PLAINTEXT
@@ -96,6 +110,12 @@ services:
       SCHEMA_REGISTRY_SCHEMA_REGISTRY_INTER_INSTANCE_PROTOCOL: "http"
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: INFO
       SCHEMA_REGISTRY_KAFKASTORE_TOPIC: _schemas
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://schemaregistry:8081/subjects"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
 
   # akhq:
   #   image: tchiotludo/akhq:0.25.1
@@ -103,9 +123,12 @@ services:
   #   ports:
   #     - "8080:8080"
   #   depends_on:
-  #     - kafka
-  #     - schemaregistry
-  #     - debezium-configurer
+  #     kafka:
+  #       condition: service_healthy
+  #     schemaregistry:
+  #       condition: service_healthy
+  #     debezium-configurer:
+  #       condition: service_started
   #   environment:
   #     AKHQ_CONFIGURATION: |
   #       micronaut:
@@ -134,9 +157,12 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - kafka
-      - schemaregistry
-      - debezium-configurer
+      kafka:
+        condition: service_healthy
+      schemaregistry:
+        condition: service_healthy
+      debezium-configurer:
+        condition: service_started
     environment:
       DYNAMIC_CONFIG_ENABLED: 'true'
       SERVER_PORT: 8080
@@ -154,6 +180,12 @@ services:
       # conflict with host-switch.exe from Rancher Desktop
       # in case of already running Dapr setup.
       - "9412:9411"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://zipkin:9411/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
   
   # Used for OTLP → Collector → Zipkin to keep app OTLP-native.
   otel-collector:
@@ -163,10 +195,23 @@ services:
       - "4317:4317" # OTLP/gRPC
       - "4318:4318" # OTLP/HTTP
     depends_on:
-      - zipkin
+      zipkin:
+        condition: service_healthy
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
     command: ["--config", "/etc/otel-collector-config.yaml"]
+
+  # Health check done here because otel-collector does not have curl, wget, nc, or similar tools. 
+  otel-collector-healthcheck:
+    image: curlimages/curl:8.15.0
+    depends_on:
+      - otel-collector
+    command: ["tail", "-f", "/dev/null"]
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://otel-collector:13133/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
 
   # outbox-pattern:
   #   image: stevenjdh/outbox-pattern
@@ -175,8 +220,8 @@ services:
   #       condition: service_healthy
   #     debezium-configurer:
   #       condition: service_started
-  #     otel-collector:
-  #       condition: service_started
+  #     otel-collector-healthcheck:
+  #       condition: service_healthy
   #   ports:
   #     - "9080:9080"
   #     - "9081:9081"
