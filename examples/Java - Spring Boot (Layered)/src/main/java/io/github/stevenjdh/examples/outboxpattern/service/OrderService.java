@@ -15,6 +15,7 @@ import io.github.stevenjdh.examples.outboxpattern.mapper.OrderPersistenceMapper;
 import io.github.stevenjdh.examples.outboxpattern.model.Order;
 import io.github.stevenjdh.examples.outboxpattern.repository.OrderJpaRepository;
 import io.micrometer.observation.annotation.Observed;
+import io.micrometer.tracing.annotation.NewSpan;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,7 @@ public class OrderService {
         this.itemMapper = itemMapper;
     }
 
+    @NewSpan
     @Transactional
     @Observed(name = "outboxpattern.order.repository", contextualName = "saveOrder")
     public Order addOrder(Order order) {
@@ -60,6 +62,7 @@ public class OrderService {
         return savedOrder;
     }
 
+    @NewSpan
     @Observed(name = "outboxpattern.order.repository", contextualName = "getPagedOrders")
     public Page<Order> getPagedOrders(Pageable pageable) {
         LOG.info("Retrieving [{}] order(s) from page [{}]...", pageable.getPageSize(),

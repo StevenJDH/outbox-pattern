@@ -14,6 +14,10 @@ spring:
         format_sql: true
         # Optional: Naming strategy for snake_case DB columns (default).
         physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+  output:
+    ansi:
+      # Supported values are ALWAYS, DETECT (default), and NEVER.
+      enabled: always
   jackson:
     default-property-inclusion: non_null
     # Optional: Use UTC timezone for timestamps (default).
@@ -30,6 +34,18 @@ spring:
 
 server:
   port: 9080
+  tomcat:
+    baseDir: "./target"
+    accesslog:
+      enabled: false
+      directory: "/logs"
+      # Formating the date depends on what server is used. See the following:
+      #     Tomcat (Default): %{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}t
+      #     Undertow: %{time,yyyy-MM-dd'T'HH:mm:ss.SSSXXX}
+      # NOTE: MDC values are not supported, unless you add
+      # dev.akkinoc.spring.boot:logback-access-spring-boot-starter dependency.
+      pattern: "[Date: %{${logging.pattern.dateformat}}t] [IP: %h] [Url: %r] [Status: %s] [Bytes: %b]"
+      rotatable: true
   # Listens for shutdown signals and lets beans close properly, including connection pools. (Default: immediate)
   shutdown: graceful
 
@@ -80,15 +96,64 @@ management:
       jdbc: true
       hikaricp: true
       outboxpattern: true
+  otlp:
+    tracing:
+      endpoint: http://localhost:4317
+      transport: grpc
+      export:
+        enabled: true
+  tracing:
+    enabled: true
+    propagation:
+        # Combines produce and consume properties into one.
+        # Opted to not support legacy B3 standard.
+        type: w3c
+    sampling:
+      # Sample 100% of traces (good for dev/demo).
+      probability: 1.0
+    # Baggage in Spring Boot requires explicit whitelisting.
+    baggage:
+      # Fields available for local use and correlation and tag fields below.
+      local-fields: []
+      # Fields that will propagate downstream. Available locally as well.
+      remote-fields: promo
+      correlation:
+        # Fields that will be added to the MDC.
+        fields: promo,region
+      # Fields that will be added to span attributes, which can be used later
+      # for filtering in tools like Zipkin.
+      # NOTE: Currently there is a bug in the framework that doesn't add these. I've implemented
+      # a workaround, so you can ignore the log entry 'Will propagate new baggage context for entries {}'.
+      tag-fields: promo,region
   observations:
     enabled: true
+    # Global tags that are added to metrics, traces (spans), and logs for filtering.
+    key-values:
+      foobar: example
+      "service.environment": ${spring.profiles.active:local}
+    # Resource label for the source of data that is used by OTel-natve backends.
+    resource-attributes: {}
 
 logging:
+  pattern:
+    # Has a trailing space so that it is separated from the thread name that comes right after it by default.
+    correlation: "[%X{traceId:-},%X{spanId:-},%X{X-Correlation-Id:-}] "
+    # Start the application with -Duser.timezone=UTC to see console logs in UTC.
+    dateformat: "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
   file:
     # Normally something like: /usr/share/applog.
     path: ./target/logs
-# Uncomment the below to see the SQL statements with parameter bindings.
-#  level:
+  level:
+    # Shows the connection mode used by the OTLP exporter on bootup.
+    io.opentelemetry.exporter: DEBUG
+    
+    # Uncomment the below to see important details about the handling of baggage,
+    # and export related connectivity issues like timeouts that happen asynchronously.
+    # NOTE: For management.tracing.baggage.tag-fields workaround, setting to INFO instead of DEBUG.
+    io.micrometer.tracing: INFO
+#    io.opentelemetry: DEBUG
+    
+    # Uncomment the below to see the SQL statements with parameter bindings.
 #    org.hibernate.SQL: DEBUG
 #    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 #    org.hibernate.orm.jdbc.bind: TRACE
