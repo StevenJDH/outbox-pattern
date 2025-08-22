@@ -20,9 +20,18 @@ extensions:
     #   Interval: 5s
     #   ExporterFailureThreshold: 1
 
+processors:
+  filter/drop-healthchecks:
+    traces:
+      span:
+        - 'resource.attributes["service.name"] == "debezium-connect" and attributes["http.route"] == "/"'
+        - 'resource.attributes["service.name"] == "debezium-connect" and attributes["http.route"] == "/connectors"'
+        - 'resource.attributes["service.name"] == "debezium-connect" and attributes["db.operation"] == "SELECT"'
+
 service:
   extensions: [health_check]
   pipelines:
     traces:
       receivers: [otlp]
+      processors: [filter/drop-healthchecks]
       exporters: [zipkin]
