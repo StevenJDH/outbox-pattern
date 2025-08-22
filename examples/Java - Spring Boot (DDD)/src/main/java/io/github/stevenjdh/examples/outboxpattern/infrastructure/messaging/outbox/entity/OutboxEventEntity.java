@@ -38,6 +38,8 @@ public class OutboxEventEntity {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb", nullable = false)
     private JsonNode payload;
+    
+    private String tracingSpanContext;
 
     private Instant timestamp;
 
@@ -93,6 +95,14 @@ public class OutboxEventEntity {
 
     public JsonNode getPayload() {
         return payload;
+    }
+
+    public String getTracingSpanContext() {
+        return tracingSpanContext;
+    }
+
+    public void setTracingSpanContext(String tracingSpanContext) {
+        this.tracingSpanContext = tracingSpanContext;
     }
 
     public void setTimestamp(Instant timestamp) {
