@@ -57,6 +57,8 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
+      otel-collector-healthcheck:
+        condition: service_healthy
     ports:
       - "8083:8083"
     environment:
@@ -69,12 +71,23 @@ services:
       VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
       KEY_CONVERTER_SCHEMAS_ENABLE: "false"
       VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+      KAFKA_OPTS: "-javaagent:/otel/opentelemetry-javaagent.jar"
+      OTEL_SERVICE_NAME: debezium-connect
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_METRICS_EXPORTER: none
+      OTEL_LOGS_EXPORTER: none
+      OTEL_PROPAGATORS: tracecontext,baggage
     healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://debezium:8083/connectors"]
+      # Using about endpoint instead of /connectors because it's lighter.
+      test: ["CMD", "curl", "-fsS", "http://debezium:8083/"]
       interval: 10s
       timeout: 5s
       retries: 12
       start_period: 15s
+    volumes:
+      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
 
   debezium-configurer:
     image: curlimages/curl:8.15.0
