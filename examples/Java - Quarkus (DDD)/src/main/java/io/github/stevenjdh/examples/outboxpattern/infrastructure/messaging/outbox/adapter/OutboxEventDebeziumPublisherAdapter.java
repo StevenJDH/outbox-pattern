@@ -18,6 +18,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Event;
 import io.github.stevenjdh.examples.outboxpattern.infrastructure.messaging.outbox.mapper.ExportedEventMapper;
 import io.micrometer.core.annotation.Timed;
+import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class OutboxEventDebeziumPublisherAdapter implements OutboxEventPublisher {
@@ -25,7 +26,8 @@ public class OutboxEventDebeziumPublisherAdapter implements OutboxEventPublisher
     private final Event<ExportedEvent<?, ?>> eventPublisher;
     private final ExportedEventMapper eventMapper;
     private final ObjectMapper objectMapper;
-
+    
+    @Inject
     public OutboxEventDebeziumPublisherAdapter(Event<ExportedEvent<?, ?>> eventPublisher,
                                                ExportedEventMapper eventMapper,
                                                ObjectMapper objectMapper) {

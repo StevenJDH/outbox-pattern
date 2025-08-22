@@ -1,7 +1,7 @@
 # Variables
 MVN=mvn
 DOCKER_COMPOSE=docker-compose
-PROJECT_NAME=outbox_pattern
+PROJECT_NAME=outbox-pattern
 
 # Default target
 all: start build run

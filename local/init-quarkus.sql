@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS outbox_event (
   aggregate_id VARCHAR(255) NOT NULL,          -- e.g., "12345"
   "type" VARCHAR(255) NOT NULL,                -- e.g., "OrderCreated"
   payload VARCHAR(8000) NULL,                  -- Event data
-  tracing_span_context VARCHAR(256) NULL,      -- Optional, for tracing
+  tracing_span_context VARCHAR(256) NULL,      -- Optional, tracing baggage
   "timestamp" TIMESTAMP NOT NULL DEFAULT now() -- Optional, for tracking
 );
 
