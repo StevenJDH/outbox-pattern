@@ -87,6 +87,8 @@ services:
       retries: 12
       start_period: 15s
     volumes:
+      # Using version v2.19.0 of the OpenTelemetry Agent.
+      # Source: https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v2.19.0/opentelemetry-javaagent.jar
       - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
 
   debezium-configurer:
@@ -100,9 +102,9 @@ services:
     entrypoint: |
       sh -c '
         echo "Debezium is healthy, configuring connector..." &&
-        curl -sS -w "%{http_code}" http://debezium:8083/connectors \
+        curl -sSf -w "\nHTTP Response Code: %{http_code}\n" http://debezium:8083/connectors \
           -H "Content-Type: application/json" \
-          -d @/init-connector.json -v
+          -d @/init-connector.json
       '
     volumes:
       - ./init-connector.json:/init-connector.json
@@ -216,12 +218,11 @@ services:
 
   # Health check done here because otel-collector does not have curl, wget, nc, or similar tools. 
   otel-collector-healthcheck:
-    image: curlimages/curl:8.15.0
+    image: nginx:1.29.1-alpine-slim
     depends_on:
       - otel-collector
-    command: ["tail", "-f", "/dev/null"]
     healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://otel-collector:13133/health"]
+      test: ["CMD-SHELL", "wget -qO- http://otel-collector:13133/health | grep -qi 'Server available'"]
       interval: 10s
       timeout: 5s
       retries: 12
