@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-  You should have received a copy of the GNU General Public License
-  along with Covid Tracker.  If not, see <http://www.gnu.org/licenses/>.
-  
   This file is part of Outbox Pattern <https://github.com/StevenJDH/outbox-pattern>.
   Copyright (c) 2025 Steven Jenkins De Haro
   
@@ -67,10 +64,6 @@
             <groupId>io.hypersistence</groupId>
             <artifactId>hypersistence-utils-hibernate-63</artifactId>
             <version>${hypersistence-utils.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -152,6 +145,7 @@
                         <excludeProperty>^git.commit.user.(email|name)$</excludeProperty>
                         <excludeProperty>^git.commit.message.(short|full)$</excludeProperty>
                     </excludeProperties>
+                    <verbose>false</verbose>
                 </configuration>
             </plugin>
             <plugin>
