@@ -10,11 +10,11 @@
 package io.github.stevenjdh.examples.outboxpattern.infrastructure.persistence.entity;
 
 import io.github.stevenjdh.examples.outboxpattern.domain.order.enums.OrderStatus;
-import io.github.stevenjdh.examples.outboxpattern.infrastructure.persistence.converter.OrderStatusEnumConverter;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -39,7 +39,7 @@ public class OrderEntity {
     @Column(nullable = false)
     private Instant orderDate;
 
-    @Convert(converter = OrderStatusEnumConverter.class)
+    @Enumerated(EnumType.STRING)
     @Column(length = 50, nullable = false)
     private OrderStatus status;
 

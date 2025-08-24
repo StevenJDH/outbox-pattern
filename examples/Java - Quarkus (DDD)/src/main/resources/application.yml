@@ -36,7 +36,6 @@ quarkus:
       name: aggregate_type
     aggregate-id:
       name: aggregate_id
-      column-definition: io.github.stevenjdh.examples.outboxpattern.infrastructure.persistence.converter.UUIDConverter
     type:
       name: type
     payload:
