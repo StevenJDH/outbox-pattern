@@ -9,19 +9,20 @@
 
 package io.github.stevenjdh.examples.outboxpattern.infrastructure.messaging.outbox.event;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.debezium.outbox.quarkus.ExportedEvent;
 import java.time.Instant;
 
-public class OrderCreatedExportedEvent implements ExportedEvent<String, String> {
+public class OutboxExportedEvent implements ExportedEvent<String, JsonNode> {
 
     private final String aggregateType;
     private final String aggregateId;
     private final String eventType;
-    private final String payload;
+    private final JsonNode payload;
     private final Instant timestamp;
 
-    public OrderCreatedExportedEvent(String aggregateType, String aggregateId,
-            String eventType, String payload, Instant timestamp) {
+    public OutboxExportedEvent(String aggregateType, String aggregateId,
+            String eventType, JsonNode payload, Instant timestamp) {
         
         this.aggregateType = aggregateType;
         this.aggregateId = aggregateId;
@@ -51,7 +52,7 @@ public class OrderCreatedExportedEvent implements ExportedEvent<String, String> 
     }
 
     @Override
-    public String getPayload() {
+    public JsonNode getPayload() {
         return payload;
     }
 }

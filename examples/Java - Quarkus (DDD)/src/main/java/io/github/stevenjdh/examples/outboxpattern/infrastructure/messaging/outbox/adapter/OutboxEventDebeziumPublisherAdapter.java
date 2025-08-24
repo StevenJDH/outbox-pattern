@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.debezium.outbox.quarkus.ExportedEvent;
 import io.github.stevenjdh.examples.outboxpattern.domain.shared.event.OutboxEvent;
 import io.github.stevenjdh.examples.outboxpattern.domain.shared.event.OutboxEventPublisher;
-import io.github.stevenjdh.examples.outboxpattern.infrastructure.messaging.outbox.event.OrderCreatedExportedEvent;
+import io.github.stevenjdh.examples.outboxpattern.infrastructure.messaging.outbox.event.OutboxExportedEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Event;
 import io.github.stevenjdh.examples.outboxpattern.infrastructure.messaging.outbox.mapper.ExportedEventMapper;
@@ -40,7 +40,7 @@ public class OutboxEventDebeziumPublisherAdapter implements OutboxEventPublisher
     @Override
     @Timed(value = "outboxpattern.event.repository", extraTags = {"contextual.name", "saveEvent"})
     public void fire(OutboxEvent<?, ?> event) {
-        OrderCreatedExportedEvent exportedEvent = eventMapper.toExportedEvent(event, objectMapper);
+        OutboxExportedEvent exportedEvent = eventMapper.toExportedEvent(event, objectMapper);
         eventPublisher.fire(exportedEvent);
     }
 }

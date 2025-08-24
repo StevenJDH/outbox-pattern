@@ -41,6 +41,7 @@
         -->
         <quarkus.platform.version>3.23.4</quarkus.platform.version>
         <mapstruct.version>1.6.3</mapstruct.version>
+        <hypersistence-utils.version>3.9.10</hypersistence-utils.version>
         <assertj-core.version>3.27.4</assertj-core.version>
         <!-- Plugin Versions -->
         <compiler-plugin.version>3.14.0</compiler-plugin.version>
@@ -88,6 +89,11 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-orm-panache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.hypersistence</groupId>
+            <artifactId>hypersistence-utils-hibernate-63</artifactId>
+            <version>${hypersistence-utils.version}</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>

@@ -41,6 +41,8 @@ quarkus:
       name: type
     payload:
        name: payload
+       column-definition: JSONB
+       type: io.github.stevenjdh.examples.outboxpattern.infrastructure.messaging.outbox.serialization.PayloadJsonBinaryType
     timestamp:
       name: timestamp
     tracing-span:
@@ -77,7 +79,7 @@ quarkus:
       attributes: foobar=example,service.environment=${quarkus.profile:local}
   native:
     resources:
-      includes: git.properties
+      includes: git.properties,banner.txt
   
   live-reload:
     enabled: false

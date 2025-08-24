@@ -49,7 +49,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - ${INIT_SCRIPT-./init.sql}:/docker-entrypoint-initdb.d/init.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   debezium:
     image: debezium/connect:3.0.0.Final
