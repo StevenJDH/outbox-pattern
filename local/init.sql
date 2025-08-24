@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS outbox_event (
   aggregate_type VARCHAR(255) NOT NULL,        -- e.g., "Order"
   aggregate_id VARCHAR(255) NOT NULL,          -- e.g., "12345"
   "type" VARCHAR(255) NOT NULL,                -- e.g., "OrderCreated"
-  payload JSONB,                               -- Event data
+  payload JSONB NULL,                          -- Event data
   tracing_span_context VARCHAR(256),           -- Optional, tracing baggage
   "timestamp" TIMESTAMP NOT NULL DEFAULT now() -- Optional, for tracking
 );
