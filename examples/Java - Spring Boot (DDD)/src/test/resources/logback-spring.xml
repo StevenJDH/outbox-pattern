@@ -10,6 +10,11 @@
     <!-- Adds the default console appenders for Spring Boot. -->
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    
+    <!-- Silences the 'No JTA platform available' message from the Hibernate JTA platform logger. -->
+    <logger name="org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator" level="ERROR" />
+    <!-- Silences Hibernate's startup info about database connection pool details. -->
+    <logger name="org.hibernate.orm.connections.pooling" level="WARN" />
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
