@@ -36,7 +36,7 @@ public class BaggageSpanEnricherFilter implements Filter {
     private final List<String> tagFields;
     private static final Logger LOG = LoggerFactory.getLogger(BaggageSpanEnricherFilter.class.getName());
 
-    public BaggageSpanEnricherFilter(@Value("${management.tracing.baggage.tag-fields}")List<String> tagFields) {
+    public BaggageSpanEnricherFilter(@Value("${management.tracing.baggage.tag-fields:[]}")List<String> tagFields) {
         this.tagFields = tagFields;
     }
     
