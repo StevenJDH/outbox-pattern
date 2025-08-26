@@ -9,8 +9,12 @@ quarkus:
   hibernate-orm:
     database:
       generation: drop-and-create
+  http:
+    # Set to 0 to make it random.
+    test-port: 9090
   management:
     enabled: false
+    test-port: 9091
   micrometer:
     enabled: false
   otel:
