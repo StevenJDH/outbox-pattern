@@ -2,8 +2,10 @@ quarkus:
   application:
     name: outbox-pattern
   banner:
-    # Disabled for custom logo.
+    # Disabled to use custom banner section below that emulates Spring Boot's banner functionality.
     enabled: false
+    # When above is enabled, this sets custom banner path/name to use. (Default: default_banner.txt).
+    path: banner.txt
   datasource:
     db-kind: postgresql
     username: postgres
@@ -78,7 +80,7 @@ quarkus:
       attributes: foobar=example,service.environment=${quarkus.profile:local}
   native:
     resources:
-      includes: git.properties,banner.txt
+      includes: git.properties,${banner.path}
   
   live-reload:
     enabled: false
@@ -120,6 +122,19 @@ quarkus:
             value: Outbox Demo
           solution:
             value: Example
+    category:
+      # Silences Hibernate's startup info about database connection pool details.
+      org.hibernate.orm.connections.pooling:
+        level: WARN
+
+banner:
+  # When quarkus.banner.enabled is false, set this to true to use custom logic that
+  # emulates Spring Boot's banner functionality. Essentially, it adds padding,
+  # removes subtext, and shows when running tests.
+  enabled: true
+  # When above is enabled, this sets custom banner path/name to use. (Default: default_banner.txt).
+  path: banner.txt
+
 logging:
   pattern:
     base: "%d{${logging.pattern.dateformat}} %5p %i --- [${quarkus.application.name}] [%20.20t] ${logging.pattern.correlation}%-40.40c{1.} : %s%n%e"
@@ -132,12 +147,6 @@ logging:
     correlation: "[%X{traceId},%X{spanId},%X{X-Correlation-Id}] "
 
 "%dev":
-  quarkus:
-    log:
-      file:
-        json:
-          enabled: false
-"%test":
   quarkus:
     log:
       file:
