@@ -5,14 +5,10 @@ quarkus:
     username: sa
     password: sa
     jdbc:
-      url: jdbc:h2:mem:orders_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      url: jdbc:h2:mem:orders_db;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
   hibernate-orm:
     database:
       generation: drop-and-create
-  debezium-outbox:
-    payload:
-       column-definition: VARCHAR(8000)
-       type: null
   management:
     enabled: false
   micrometer:
@@ -23,3 +19,6 @@ quarkus:
     file:
       json:
         enabled: false
+logging:
+  pattern:
+    correlation: ""
