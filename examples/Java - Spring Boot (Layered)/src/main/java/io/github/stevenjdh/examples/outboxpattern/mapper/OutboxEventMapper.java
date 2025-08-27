@@ -35,12 +35,12 @@ public interface OutboxEventMapper {
             if (baggageHeader.length() > 0) {
                 baggageHeader.append(",");
             }
-            baggageHeader.append(key).append("=").append(entry.getValue());
+            baggageHeader.append(key).append("\\=").append(entry.getValue());
         });      
         
         if (baggageHeader.length() > 0) {
-            // Format: baggage=key1=val1,key2=val2.
-            return String.format("baggage=%s", baggageHeader.toString());
+            // Format: baggage=key1\\=val1,key2\\=val2\n.
+            return String.format("baggage=%s", baggageHeader.append("\n").toString());
         }
         return null;
     }
