@@ -1,0 +1,160 @@
+quarkus:
+  application:
+    name: outbox-pattern
+  banner:
+    # Disabled to use custom banner section below that emulates Spring Boot's banner functionality.
+    enabled: false
+    # When above is enabled, this sets custom banner path/name to use. (Default: default_banner.txt).
+    path: banner.txt
+  datasource:
+    db-kind: postgresql
+    username: postgres
+    password: password
+    jdbc:
+      url: jdbc:postgresql://localhost:5432/orders_db
+  http:
+    port: 9080
+    access-log:
+      enabled: false
+      pattern: "[Date: %{time,${logging.pattern.dateformat}}] [IP: %h] [Url: %r] [Status: %s] [Bytes: %b] [TraceId: %{X,traceId}] [SpanId: %{X,spanId}]"
+  shutdown:
+    # Define maximum time before forcing shutdown after Listening for shutdown
+    # signals and lets beans close properly, including connection pools. (Default: 0S).
+    timeout: 30S
+  hibernate-orm:
+    database:
+      generation: validate
+    physical-naming-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    log:
+      sql: false
+      bind-parameters: false
+  jackson:
+    write-dates-as-timestamps: false
+  debezium-outbox:
+    table-name: outbox_event
+    id:
+      name: id
+    aggregate-type:
+      name: aggregate_type
+    aggregate-id:
+      name: aggregate_id
+    type:
+      name: type
+    payload:
+       name: payload
+       column-definition: JSONB
+       type: io.github.stevenjdh.examples.outboxpattern.serialization.PayloadJsonBinaryType
+    timestamp:
+      name: timestamp
+    tracing-span:
+      name: tracing_span_context
+    remove-after-insert: false
+  management:
+    enabled: true
+    port: 9081
+    root-path: /management
+  smallrye-health:
+    liveness-path: ${quarkus.management.root-path}/health/liveness
+    readiness-path: ${quarkus.management.root-path}/health/readiness
+  micrometer:
+    enabled: true
+    registry-enabled-default: true
+    binder-enabled-default: true
+    export:
+      prometheus:
+        enabled: true
+        path: ${quarkus.management.root-path}/prometheus
+  otel:
+    enabled: true
+    exporter:
+      otlp:
+        endpoint: http://localhost:4317
+        protocol: grpc
+    # Opted to not support legacy B3 standard.
+    propagators: tracecontext,baggage
+    traces:
+      sampler:
+        # Sample 100% of traces (good for dev/demo).
+        arg: 1.0d
+    resource:
+      attributes: foobar=example,service.environment=${quarkus.profile:local}
+  native:
+    resources:
+      includes: git.properties,${banner.path}
+  
+  live-reload:
+    enabled: false
+  devservices:
+    enabled: false
+  test:
+    continuous-testing: disabled
+  
+  log:
+    level: INFO
+    console:
+      enable: true
+      format: ${logging.pattern.console}
+      color: true
+      json:
+        enabled: false
+    file:
+      enable: true
+      format: ${logging.pattern.file}
+      # Normally something like: /usr/share/applog, but leaving default path because changes
+      # seem to only apply later in the execution chain in Quarkus.
+      path: ./target/quarkus.log
+      rotation:
+        max-file-size: 10M
+        max-backup-index: 7
+        rotate-on-boot: false
+        file-suffix: ".yyyy-MM-dd.gz"
+      encoding: UTF-8
+      json:
+        # Quarkus has quarkus-logging-json for JSON logs. It's JSON log file appender is
+        # similar to the ECS encoder, but it's not ECS out-of-the-box, just very similar.
+        # Using io.quarkiverse.logging.logback:quarkus-logging-logback with the ECS encoder
+        # is too much of a pain in Quarkus, and it has several limitations.
+        enabled: true
+        log-format: ecs
+        zone-id: UTC
+        additional-field:
+          project:
+            value: Outbox Demo
+          solution:
+            value: Example
+    category:
+      # Silences Hibernate's startup info about database connection pool details.
+      org.hibernate.orm.connections.pooling:
+        level: WARN
+
+banner:
+  # When quarkus.banner.enabled is false, set this to true to use custom logic that
+  # emulates Spring Boot's banner functionality. Essentially, it adds padding,
+  # removes subtext, and shows when running tests.
+  enabled: true
+  # When above is enabled, this sets custom banner path/name to use. (Default: default_banner.txt).
+  path: banner.txt
+
+logging:
+  pattern:
+    base: "%d{${logging.pattern.dateformat}} %5p %i --- [${quarkus.application.name}] [%20.20t] ${logging.pattern.correlation}%-40.40c{1.} : %s%n%e"
+    console: ${logging.pattern.base}
+    file: ${logging.pattern.base}
+    # Start the application with -Duser.timezone=UTC to see console logs in UTC.
+    dateformat: "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+    # Has a trailing space so that it is separated from the thread name that comes right after it by default.
+    # NOTE: There is also %X{parentId} and %X{sampled} available.
+    correlation: "[%X{traceId},%X{spanId},%X{X-Correlation-Id}] "
+
+"%dev":
+  quarkus:
+    log:
+      file:
+        json:
+          enabled: false
+"%local":
+  quarkus:
+    log:
+      file:
+        json:
+          enabled: false

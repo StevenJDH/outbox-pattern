@@ -1,0 +1,28 @@
+# Test settings.
+quarkus:
+  datasource:
+    db-kind: h2
+    username: sa
+    password: sa
+    jdbc:
+      url: jdbc:h2:mem:orders_db;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+  hibernate-orm:
+    database:
+      generation: drop-and-create
+  http:
+    # Set to 0 to make it random.
+    test-port: 9090
+  management:
+    enabled: false
+    test-port: 9091
+  micrometer:
+    enabled: false
+  otel:
+    enabled: false
+  log:
+    file:
+      json:
+        enabled: false
+logging:
+  pattern:
+    correlation: ""
