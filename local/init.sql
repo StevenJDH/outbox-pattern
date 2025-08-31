@@ -27,12 +27,14 @@ CREATE TABLE IF NOT EXISTS order_items (
 
 CREATE TABLE IF NOT EXISTS outbox_event (
   id UUID PRIMARY KEY,
-  aggregate_type VARCHAR(255) NOT NULL,        -- e.g., "Order"
-  aggregate_id VARCHAR(255) NOT NULL,          -- e.g., "12345"
-  "type" VARCHAR(255) NOT NULL,                -- e.g., "OrderCreated"
-  payload JSONB NULL,                          -- Event data
-  tracing_span_context VARCHAR(256),           -- Optional, tracing baggage
-  "timestamp" TIMESTAMP NOT NULL DEFAULT now() -- Optional, for tracking
+  aggregate_type VARCHAR(255) NOT NULL,         -- e.g., "order"
+  aggregate_id VARCHAR(255) NOT NULL,           -- e.g., "12345"
+  "type" VARCHAR(255) NOT NULL,                 -- e.g., "OrderCreated"
+  payload JSONB NULL,                           -- Event data
+  tracing_span_context VARCHAR(256),            -- Optional, tracing baggage
+  "timestamp" TIMESTAMP NOT NULL DEFAULT now(), -- Optional, for tracking
+  CONSTRAINT chk_aggregate_type_lowercase
+    CHECK (aggregate_type = lower(aggregate_type))
 );
 
 -- Debezium uses this publication with pgoutput
