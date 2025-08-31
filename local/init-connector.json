@@ -2,7 +2,6 @@
     "name": "outbox-connector",
     "config": {
       "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
-      "plugin.name": "pgoutput",
       "database.hostname": "postgres",
       "database.port": "5432",
       "database.user": "postgres",
@@ -10,7 +9,9 @@
       "database.dbname": "orders_db",
       "database.server.name": "example",
       "publication.name": "debezium_pub",
+      "plugin.name": "pgoutput",
       "slot.name": "debezium_slot",
+      "topic.prefix": "debezium",
       "table.include.list": "public.outbox_event",
       "transforms": "outbox",
       "transforms.outbox.type": "io.debezium.transforms.outbox.EventRouter",
@@ -21,16 +22,22 @@
       "transforms.outbox.table.field.event.payload": "payload",
       "transforms.outbox.tracing.span.context.field": "tracing_span_context",
       "transforms.outbox.table.field.event.timestamp": "timestamp", 
+      "transforms.outbox.table.fields.additional.placement" : "type:header,tracing_span_context:header:baggage",
+      "transforms.outbox.table.expand.json.payload" : "true",
       "transforms.outbox.route.by.field": "aggregate_type",
       "transforms.outbox.route.topic.regex": "(.*)",
       "transforms.outbox.route.topic.replacement": "outbox.$1",
-      "transforms.outbox.table.fields.additional.placement" : "type:header,tracing_span_context:header:baggage",
-      "transforms.outbox.table.expand.json.payload" : "true",
       "key.converter": "org.apache.kafka.connect.json.JsonConverter",
       "value.converter": "org.apache.kafka.connect.json.JsonConverter",
       "key.converter.schemas.enable": "false",
       "value.converter.schemas.enable": "false",
       "replication.factor": "1",
-      "topic.prefix": "debezium"
+      "errors.tolerance": "none",
+      "errors.retry.timeout": "60000 ",
+      "errors.deadletterqueue.topic.name": "outbox.failed.events-dlt",
+      "errors.deadletterqueue.topic.replication.factor": "-1",
+      "errors.deadletterqueue.context.headers": "true",
+      "errors.log.enable": "false",
+      "errors.log.include.messages": "false"
     }
 }
