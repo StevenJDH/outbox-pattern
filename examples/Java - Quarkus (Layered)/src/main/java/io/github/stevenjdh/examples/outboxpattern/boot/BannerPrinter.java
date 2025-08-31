@@ -13,7 +13,6 @@ import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.event.Observes;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,19 +40,16 @@ public class BannerPrinter {
 
         if (banner != null) {
             LOG.info("\n\n{}", banner.stripTrailing());
-        } else {
-            LOG.warn("The [{}] file was not found in classpath.", bannerPath);
         }
     }
 
     private String loadBanner() {
         try (var is = BannerPrinter.class.getClassLoader().getResourceAsStream(bannerPath)) {
             if (is == null) {
+                LOG.warn("The [{}] file was not found in classpath.", bannerPath);
                 return null;
             }
-            try (var scanner = new Scanner(is, StandardCharsets.UTF_8.name())) {
-                return scanner.useDelimiter("\\A").next();
-            }
+            return new String(is.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException ex) {
             LOG.warn("Failed to load the [{}] file.", bannerPath);
             return null;
