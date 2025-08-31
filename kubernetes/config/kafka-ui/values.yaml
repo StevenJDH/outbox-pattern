@@ -1,0 +1,56 @@
+yamlApplicationConfig:
+  kafka:
+    clusters:
+      - name: strimzi
+        bootstrapServers: my-strimzi-cluster-kafka-bootstrap.strimzi.svc.cluster.local:9094
+        properties:
+          security.protocol: SSL
+          ssl.keystore.location: /var/client/user.p12
+          ssl.keystore.password: ${KEYSTORE_PASSWORD}
+          ssl.keystore.type: PKCS12
+          ssl.truststore.location: /var/cluster/ca.p12
+          ssl.truststore.password: ${TRUSTSTORE_PASSWORD}
+          ssl.truststore.type: PKCS12
+        KafkaConnect:
+          - name: debezium-connect-cluster
+            address: http://debezium-connect-cluster-connect.strimzi.svc.cluster.local:8083
+  auth:
+    type: disabled
+  management:
+    health:
+      ldap:
+        enabled: false
+
+env:
+  - name: KEYSTORE_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: kafka-ui
+        key: user.password
+  - name: TRUSTSTORE_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: my-strimzi-cluster-cluster-ca-cert
+        key: ca.password
+
+volumeMounts:
+  - name: client-auth-volume
+    mountPath: "/var/client"
+    readOnly: true
+  - name: cluster-ca-volume
+    mountPath: "/var/cluster"
+    readOnly: true
+
+volumes:
+  - name: client-auth-volume
+    secret:
+      secretName: kafka-ui
+      items:
+        - key: user.p12
+          path: user.p12
+  - name: cluster-ca-volume
+    secret:
+      secretName: my-strimzi-cluster-cluster-ca-cert
+      items:
+        - key: ca.p12
+          path: ca.p12

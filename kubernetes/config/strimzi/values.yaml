@@ -1,0 +1,5 @@
+kafka:
+  authorization:
+      superUsers:
+      - CN=kafka-ui
+      - CN=connect-cluster
