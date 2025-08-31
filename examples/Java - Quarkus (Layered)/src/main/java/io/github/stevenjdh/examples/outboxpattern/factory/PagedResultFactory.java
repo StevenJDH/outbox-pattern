@@ -12,7 +12,6 @@ package io.github.stevenjdh.examples.outboxpattern.factory;
 import io.github.stevenjdh.examples.outboxpattern.pagination.PagedResult;
 import io.github.stevenjdh.examples.outboxpattern.repository.entity.OrderEntity;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
-import java.util.List;
 
 public class PagedResultFactory {
 
@@ -20,10 +19,8 @@ public class PagedResultFactory {
     }
     
     public static PagedResult<OrderEntity> from(PanacheQuery<OrderEntity> query) {
-        List<OrderEntity> orderEntities = query.list();
-        
         return new PagedResult<>(
-            orderEntities,
+            query.list(),
             query.page().index,
             query.page().size,
             query.count(),
