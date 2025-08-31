@@ -19,6 +19,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "cdi")
 public interface ExportedEventMapper {
 
+    // aggregateType value should be lowercase to support lowercase naming in Kubernetes for topic resouces.
+    @Mapping(target = "aggregateType", expression = "java(event.getAggregateType().toString().toLowerCase())")
     @Mapping(target = "aggregateId", expression = "java(event.getAggregateId().toString())")
     @Mapping(target = "eventType", source = "type")
     @Mapping(target = "payload", expression = "java(objectMapper.valueToTree(event.getPayload()))")

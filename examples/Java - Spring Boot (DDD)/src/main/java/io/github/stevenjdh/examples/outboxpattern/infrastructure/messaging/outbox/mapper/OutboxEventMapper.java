@@ -22,6 +22,8 @@ import org.mapstruct.Mapping;
 public interface OutboxEventMapper {
 
     @Mapping(target = "id", expression = "java(UUID.randomUUID())")
+    // aggregateType value should be lowercase to support lowercase naming in Kubernetes for topic resouces.
+    @Mapping(target = "aggregateType", expression = "java(event.getAggregateType().toString().toLowerCase())")
     @Mapping(target = "aggregateId", expression = "java(((UUID) event.getAggregateId()).toString())")
     @Mapping(target = "payload", expression = "java(objectMapper.valueToTree(event.getPayload()))")
     @Mapping(target = "tracingSpanContext", expression = "java(getBaggage())")
@@ -39,8 +41,8 @@ public interface OutboxEventMapper {
         });      
         
         if (baggageHeader.length() > 0) {
-            // Format: baggage=key1\\=val1,key2\\=val2\n.
-            return String.format("baggage=%s", baggageHeader.append("\n").toString());
+            // Format: baggage=key1\\=val1,key2\\=val2\r\n.
+            return String.format("baggage=%s", baggageHeader.append("\r\n").toString());
         }
         return null;
     }
