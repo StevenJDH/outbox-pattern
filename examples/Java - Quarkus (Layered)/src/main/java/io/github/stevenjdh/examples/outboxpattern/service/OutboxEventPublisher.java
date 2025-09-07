@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.debezium.outbox.quarkus.ExportedEvent;
 import io.github.stevenjdh.examples.outboxpattern.event.OutboxExportedEvent;
 import io.github.stevenjdh.examples.outboxpattern.mapper.ExportedEventMapper;
-import io.github.stevenjdh.examples.outboxpattern.service.abstraction.OutboxEvent;
+import io.github.stevenjdh.examples.outboxpattern.event.abstraction.OutboxEvent;
 import io.micrometer.core.annotation.Timed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Event;

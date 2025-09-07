@@ -10,7 +10,7 @@
 package io.github.stevenjdh.examples.outboxpattern.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.stevenjdh.examples.outboxpattern.service.abstraction.OutboxEvent;
+import io.github.stevenjdh.examples.outboxpattern.event.abstraction.OutboxEvent;
 import io.github.stevenjdh.examples.outboxpattern.repository.entity.OutboxEventEntity;
 import io.opentelemetry.api.baggage.Baggage;
 import java.util.UUID;

@@ -7,9 +7,10 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package io.github.stevenjdh.examples.outboxpattern.model;
+package io.github.stevenjdh.examples.outboxpattern.event;
 
-import io.github.stevenjdh.examples.outboxpattern.service.abstraction.OutboxEvent;
+import io.github.stevenjdh.examples.outboxpattern.event.abstraction.OutboxEvent;
+import io.github.stevenjdh.examples.outboxpattern.model.Order;
 import java.time.Instant;
 import java.util.UUID;
 

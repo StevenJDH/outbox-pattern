@@ -11,7 +11,7 @@ package io.github.stevenjdh.examples.outboxpattern.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.stevenjdh.examples.outboxpattern.event.OutboxExportedEvent;
-import io.github.stevenjdh.examples.outboxpattern.service.abstraction.OutboxEvent;
+import io.github.stevenjdh.examples.outboxpattern.event.abstraction.OutboxEvent;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
