@@ -3,3 +3,13 @@ kafka:
       superUsers:
       - CN=kafka-ui
       - CN=connect-cluster
+  rackTopology:
+    enabled: false
+
+nodePools:
+  broker:
+    annotations:
+      strimzi.io/next-node-ids: "[0-9]"
+  kraft-controller:
+    annotations:
+      strimzi.io/next-node-ids: "[10-19]"
