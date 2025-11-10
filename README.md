@@ -9,42 +9,41 @@ This repository if part of an introductory blog post on dev.to for how to use th
 
 [![Buy me a coffee](https://img.shields.io/static/v1?label=Buy%20me%20a&message=coffee&color=important&style=flat&logo=buy-me-a-coffee&logoColor=white)](https://www.buymeacoffee.com/stevenjdh)
 
+## Features
 
-## Build
+* Code examples that work identically with different architectures.
+* Support for storing event payloads in PostgreSQL JSONB fields.
+* Support for OpenTelemetry.
+* Full infrastructure creation for both local and Kubernetes testing.
+* Events are dynamically routed to different outbox topics because on aggregate type.
 
-### Maven projects
+## Contents
 
-....
+* [Local](./local): Uses docker compose to setup a backend for testing the Outbox Pattern.
+* [Kubernetes](./kubernetes): Similar to the above, but implements a more real-world setup on Kubernetes.
+* [Debezium](./debezium): Shows how to optionally create a custom image with the debezium-connector-postgres plugin.
+* [Examples](./_examples): A collection of code examples using the Outbox Pattern.
 
-### Custom Kafka image with Debezium plugin
+## Usage (local)
 
-```bash
-cd debezium
-nerdctl/docker build -t debezium-connect . [--build-arg STRIMZI_VERSION=latest-kafka-3.9.0 --build-arg DEBEZIUM_CONNECTOR_VERSION=3.1.1.Final]
-```
-
-## Usage
-
-### Local
-
-#### Makefie
+### Makefile approach
 
 ```bash
 make start [app=quarkus]
-make logs [name=<kafka|postgres|debezium|debezium-configurer|kafka-ui>]
-make stop
+make logs [name=<kafka|postgres|debezium|debezium-configurer|schemaregistry|akhq|kafka-ui|zipkin|otel-collector|outbox-pattern>]
+make stop # Or 'make clean' to stop and remove image cache used.
 ```
 
-#### Docker Compose
+### Docker Compose approach
 
 ```bash
-docker-compose [--env-file ./quarkus.env] up -d
-docker-compose logs [kafka|postgres|debezium|debezium-configurer|kafka-ui]
-docker-compose down
+docker-compose up -d
+docker-compose logs [kafka|postgres|debezium|debezium-configurer|kafka-ui|zipkin|otel-collector|outbox-pattern]
 mvn spring-boot:run -f ....
+docker-compose down --volumes --remove-orphans --timeout 20
 ```
 
-#### Cleanup idle DB connections
+### Cleanup idle DB connections
 
 When an IDE doesn't support stopping a running application with a graceful shutdown (e.g., SIGINT or SIGTERM), but instead forces a shutdown (e.g., SIGKILL), then the default 10 idle pool connections will be left opened. Eventually, the default 100 connection limit PostgreSQL has will be hit. If you don't want to reset the server, then the follow commands will be useful to clean up the connections.
 
@@ -71,25 +70,6 @@ WHERE datname = current_database() AND state = 'idle';
 ```
 
 Alternatively, just run the application from a terminal to avoid the need for all of this, since `Ctrl+C` sends a SIGTERM for graceful shutdown. 
-
-### Kubernetes
-
-#### Deploy database
-
-```bash
-helm upgrade --install my-postgresql oci://registry-1.docker.io/bitnamicharts/postgresql --version 16.6.6 \
-    -f values.yaml \
-    --namespace strimzi \
-    --create-namespace \
-    --atomic
-```
-
-#### Create outbox connector
-
-```bash
-kubectl create -f outbox-connector.yaml -n strimzi
-```
-
 
 ## Contributing
 Thanks for your interest in contributing! There are many ways to contribute to this project. Get started [here](https://github.com/StevenJDH/.github/blob/main/docs/CONTRIBUTING.md).

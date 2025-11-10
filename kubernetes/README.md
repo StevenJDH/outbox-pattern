@@ -1,6 +1,11 @@
 # Outbox Pattern :: Kubernetes
 
+![Maintenance](https://img.shields.io/badge/yes-4FCA21?label=maintained&style=flat)
+![GitHub](https://img.shields.io/github/license/StevenJDH/outbox-pattern)
+
 This guide provides step-by-step instructions for implementing the Outbox Pattern on Kubernetes using Strimzi's Kafka Connect, Debezium's PostgreSQL Connector plugin, and PostgreSQL. Open-source tooling and Helm charts are used to streamline deployment and facilitate experimentation or extension for various use cases.
+
+[![Buy me a coffee](https://img.shields.io/static/v1?label=Buy%20me%20a&message=coffee&color=important&style=flat&logo=buy-me-a-coffee&logoColor=white)](https://www.buymeacoffee.com/stevenjdh)
 
 ## Configuration steps
 
@@ -10,7 +15,6 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
     helm repo add stevenjdh https://StevenJDH.github.io/helm-charts
     helm repo update
     helm upgrade --install my-strimzi-cluster stevenjdh/strimzi-cluster --version 0.1.0 \
-        --set kafka.rackTopology.enabled=false \
         -f ./config/strimzi/values.yaml \
         --namespace strimzi \
         --create-namespace \
