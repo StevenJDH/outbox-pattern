@@ -11,8 +11,8 @@ DOCKER=docker
 DOCKER_COMPOSE=docker-compose
 PROJECT_NAME=outbox-pattern
 
-SPRING_BOOT_DIR=examples/Java - Spring Boot (Layered)
-QUARKUS_DIR=examples/Java - Quarkus (DDD)
+SPRING_BOOT_DIR=_examples/Java - Spring Boot (Layered)
+QUARKUS_DIR=_examples/Java - Quarkus (DDD)
 TARGET_EXAMPLE_DIR=${SPRING_BOOT_DIR}
 EXAMPLE_RUN_GOAL=spring-boot:run -Dspring-boot.run.profiles=local
 
