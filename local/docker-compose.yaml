@@ -174,7 +174,7 @@ services:
   # The image (provectuslabs/kafka-ui) is now forked to https://github.com/kafbat/kafka-ui.
   # Reference: https://github.com/provectus/kafka-ui/issues/4502
   kafka-ui:
-    image: kafbat/kafka-ui:latest
+    image: kafbat/kafka-ui:v1.4.2
     hostname: kafbat-ui
     ports:
       - "8080:8080"
