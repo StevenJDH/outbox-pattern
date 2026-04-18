@@ -21,7 +21,7 @@
     <groupId>io.github.stevenjdh.examples</groupId>
     <artifactId>outbox-pattern</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>Outbox Pattern (Layered)</name>
+    <name>Spring Boot Outbox Pattern (Layered)</name>
     <description>A demo project for the Outbox pattern.</description>
     
     <properties>
