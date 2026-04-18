@@ -19,6 +19,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +75,7 @@ public class GlobalExceptionHandler implements ExceptionMapper<Throwable> {
     
     private Response buildErrorResponse(int statusCode, String errorReason, String message) {
         var errorResponse = new ErrorResponseDTO(
-                OffsetDateTime.now(),
+                OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS),
                 statusCode,
                 errorReason,
                 request.getUriInfo().getPath(),
@@ -84,6 +85,7 @@ public class GlobalExceptionHandler implements ExceptionMapper<Throwable> {
 
         return Response.status(statusCode)
                 .entity(errorResponse)
+                .type("application/problem+json")
                 .build();
     }
 }

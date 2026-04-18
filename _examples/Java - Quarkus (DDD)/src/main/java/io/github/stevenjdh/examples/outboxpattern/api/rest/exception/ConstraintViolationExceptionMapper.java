@@ -19,6 +19,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -61,7 +62,7 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
         LOG.error("HTTP Code [{}] - {}: [{}]", statusCode, message, validationErrors);
         
         var errorResponse = new ErrorResponseDTO(
-                OffsetDateTime.now(),
+                OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS),
                 statusCode,
                 errorReason,
                 request.getUriInfo().getPath(),
@@ -71,6 +72,7 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
 
         return Response.status(statusCode)
                 .entity(errorResponse)
+                .type("application/problem+json")
                 .build();
     }
 }

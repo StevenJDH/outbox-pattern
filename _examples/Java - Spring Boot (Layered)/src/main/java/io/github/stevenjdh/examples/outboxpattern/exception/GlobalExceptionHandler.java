@@ -12,11 +12,13 @@ package io.github.stevenjdh.examples.outboxpattern.exception;
 import io.github.stevenjdh.examples.outboxpattern.dto.response.ErrorResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -89,7 +91,7 @@ public class GlobalExceptionHandler {
                                                                 Map<String, String> validationErrors) {
 
         var errorResponse = new ErrorResponseDTO(
-                OffsetDateTime.now(),
+                OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS),
                 status.value(),
                 status.getReasonPhrase(),
                 request.getRequestURI(),
@@ -97,6 +99,8 @@ public class GlobalExceptionHandler {
                 validationErrors
         );
 
-        return ResponseEntity.status(status).body(errorResponse);
+        return ResponseEntity.status(status)
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .body(errorResponse);
     }
 }
