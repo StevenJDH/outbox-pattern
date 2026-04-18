@@ -120,7 +120,7 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
         '99999',                                      -- aggregate_id
         'OrderCreated',                               -- type
         '{"id": "99999", "status": "PLACED"}'::jsonb, -- payload (JSONB)
-        'baggage=promo\=12345,region\=eu-west',       -- tracing_span_context
+        'baggage=promo\\=12345,region\\=eu-west\r\n', -- tracing_span_context
         now()                                         -- timestamp (can be omitted since DEFAULT is now())
     );
     ```

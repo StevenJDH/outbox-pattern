@@ -3,7 +3,7 @@
 ![Maintenance](https://img.shields.io/badge/yes-4FCA21?label=maintained&style=flat)
 ![GitHub](https://img.shields.io/github/license/StevenJDH/outbox-pattern)
 
-This repository if part of an introductory blog post on dev.to for how to use the Outbox Pattern to create a reliable event-driven architecture. The focus is on using PostgreSQL and Strimzi to store data and emit events in a transactional way using a Spring Boot microservice, but these concepts can be applied to other configurations.
+This repository if part of an introductory blog post on [dev.to](#) for how to use the Outbox Pattern to create a reliable event-driven architecture. The focus is on using PostgreSQL and Strimzi to store data and emit events in a transactional way using a Spring Boot microservice, but these concepts can be applied to other configurations.
 
 ![Outbox Pattern Diagram](outbox-pattern.png "Diagram")
 
@@ -15,7 +15,7 @@ This repository if part of an introductory blog post on dev.to for how to use th
 * Support for storing event payloads in PostgreSQL JSONB fields.
 * Support for OpenTelemetry.
 * Full infrastructure creation for both local and Kubernetes testing.
-* Events are dynamically routed to different outbox topics because on aggregate type.
+* Dynamic event routing to different outbox topics based on aggregate type.
 
 ## Contents
 
@@ -29,6 +29,7 @@ This repository if part of an introductory blog post on dev.to for how to use th
 ### Makefile approach
 
 ```bash
+# Default is Spring Boot.
 make start [app=quarkus]
 make logs [name=<kafka|postgres|debezium|debezium-configurer|schemaregistry|akhq|kafka-ui|zipkin|otel-collector|outbox-pattern>]
 make stop # Or 'make clean' to stop and remove image cache used.
@@ -69,7 +70,8 @@ FROM pg_stat_activity
 WHERE datname = current_database() AND state = 'idle';
 ```
 
-Alternatively, just run the application from a terminal to avoid the need for all of this, since `Ctrl+C` sends a SIGTERM for graceful shutdown. 
+> [!TIP]
+> Alternatively, just run the application from a terminal to avoid the need for all of this, since `Ctrl+C` sends a SIGTERM for graceful shutdown.
 
 ## Contributing
 Thanks for your interest in contributing! There are many ways to contribute to this project. Get started [here](https://github.com/StevenJDH/.github/blob/main/docs/CONTRIBUTING.md).
