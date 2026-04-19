@@ -7,6 +7,15 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
 
 [![Buy me a coffee](https://img.shields.io/static/v1?label=Buy%20me%20a&message=coffee&color=important&style=flat&logo=buy-me-a-coffee&logoColor=white)](https://www.buymeacoffee.com/stevenjdh)
 
+## Prerequisites
+
+* [Rancher Desktop](https://rancherdesktop.io) for running Kubernetes 1.25+ (depends on Strimzi version) locally.
+* [Helm CLI](https://helm.sh/docs/intro/install/) 3x installed.
+* [Kubectl CLI](https://kubernetes.io/docs/tasks/tools/#kubectl) installed and configured to access the cluster.
+* [Strimzi](https://artifacthub.io/packages/olm/community-operators/strimzi-kafka-operator) 0.45+ Helm Chart (version tested).
+* [Bitnami PostgreSQL](https://artifacthub.io/packages/helm/bitnami/postgresql) 16+ Helm Chart or equivalent.
+* [DBeaver Community](https://dbeaver.io) 25+ or equivalent tool for accessing PostgreSQL database.
+
 ## Configuration steps
 
 1. Strimzi 0.45.0 or newer needs to be installed with a cluster called `my-strimzi-cluster` running at least 3 brokers. The Kafka resource must also be configured with an internal listener for port 9094 that has authentication type set to `tls` and supports `simple` authorization. Both, `CN=kafka-ui` and `CN=connect-cluster` users need to be add as super users to reduce complexity. The following commands provide a quick way to meet all of these requirements if needed.

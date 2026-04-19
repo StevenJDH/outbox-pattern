@@ -3,9 +3,13 @@
 ![Maintenance](https://img.shields.io/badge/yes-4FCA21?label=maintained&style=flat)
 ![GitHub](https://img.shields.io/github/license/StevenJDH/outbox-pattern)
 
-As an alternative to loading connector plugins dynamically as seen in the [Kubernetes](../kubernetes/) setup, one can optionally create a custom image with the debezium-connector-postgres plugin already included. The provided Dockerfile shows how this is done. 
+As an alternative to loading connector plugins dynamically as seen in the [Kubernetes](../kubernetes/) setup, one can optionally create a custom image with the debezium-connector-postgres plugin already included. The provided Dockerfile shows how this is done.
 
 [![Buy me a coffee](https://img.shields.io/static/v1?label=Buy%20me%20a&message=coffee&color=important&style=flat&logo=buy-me-a-coffee&logoColor=white)](https://www.buymeacoffee.com/stevenjdh)
+
+## Prerequisites
+
+* [Docker](https://www.docker.com/products/docker-desktop)/[Rancher](https://rancherdesktop.io) Desktop for building containers.
 
 ## Build
 

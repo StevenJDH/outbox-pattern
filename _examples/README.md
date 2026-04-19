@@ -7,6 +7,12 @@ A collection of code examples that use the Outbox Pattern. The Spring Boot and Q
 
 [![Buy me a coffee](https://img.shields.io/static/v1?label=Buy%20me%20a&message=coffee&color=important&style=flat&logo=buy-me-a-coffee&logoColor=white)](https://www.buymeacoffee.com/stevenjdh)
 
+## Prerequisites
+
+* Java 21+ ([Temurin/Adopt](https://adoptium.net)) OpenJDK for compiling.
+* make CLI 3+ for convenience. Windows users can install from [here](https://gnuwin32.sourceforge.net/packages/make.htm), and add the bin folder to the system `PATH`.
+* Optional: [Docker](https://www.docker.com/products/docker-desktop)/[Rancher](https://rancherdesktop.io) Desktop for building containers.
+
 ## Examples
 
 * [Java - Quarkus (DDD)](./Java%20-%20Quarkus%20(DDD)): A Java-based service using DDD Architecture that relies on the Outbox Pattern.
