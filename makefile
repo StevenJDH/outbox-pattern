@@ -22,9 +22,9 @@ TARGET_EXAMPLE_DIR=${QUARKUS_DIR}
 EXAMPLE_RUN_GOAL=clean quarkus:dev
 endif
 
-# Default target
+# Default target.
 .PHONY: all
-all: start build run
+all: full-pipeline
 
 # Start Docker Compose services.
 .PHONY: start
@@ -69,6 +69,6 @@ stop: docker-down
 cleanup: FLAGS=--rmi all
 cleanup: docker-down
 
-# Full pipeline: start docker, build Maven, run the app, stop docker.
+# Full pipeline: start docker and run the app.
 .PHONY: full-pipeline
-full-pipeline: start build run stop
+full-pipeline: start run
