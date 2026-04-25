@@ -3,7 +3,7 @@
 ![Maintenance](https://img.shields.io/badge/yes-4FCA21?label=maintained&style=flat)
 ![GitHub](https://img.shields.io/github/license/StevenJDH/outbox-pattern)
 
-This repository is part of an introductory blog post on [dev.to](#) (not published yet 😅) for how to use the Outbox Pattern to create a reliable event-driven architecture. The focus is on using PostgreSQL and Strimzi to store data and emit events in a transactional way using a Spring Boot or Quarkus microservice, but these concepts can be applied to other configurations.
+This repository is part of the [Using Outbox Pattern with PostgreSQL and Strimzi](#) (not published yet 😅) blog post that discusses how to use the Outbox Pattern to create a reliable event-driven architecture. The focus is on using PostgreSQL and Strimzi to store data and emit events in a transactional way using a Spring Boot or Quarkus microservice, but these concepts can be applied to other configurations.
 
 ![Outbox Pattern Diagram](outbox-pattern.png "Diagram")
 
@@ -13,7 +13,7 @@ This repository is part of an introductory blog post on [dev.to](#) (not publish
 
 * Code examples that work identically with different architectures.
 * Support for storing event payloads in PostgreSQL JSONB fields.
-* Support for OpenTelemetry.
+* Support for OpenTelemetry and Prometheus metrics.
 * Full infrastructure creation for both local and Kubernetes testing.
 * Dynamic event routing to different outbox topics based on aggregate type.
 
