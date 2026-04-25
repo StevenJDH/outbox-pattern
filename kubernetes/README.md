@@ -15,6 +15,7 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
 * [Strimzi](https://artifacthub.io/packages/olm/community-operators/strimzi-kafka-operator) 0.45+ Helm Chart (version tested).
 * [Bitnami PostgreSQL](https://artifacthub.io/packages/helm/bitnami/postgresql) 16+ Helm Chart or equivalent.
 * [DBeaver Community](https://dbeaver.io) 25+ or equivalent tool for accessing PostgreSQL database.
+* A strong cup of coffee ☕😏.
 
 ## Configuration steps
 
@@ -63,7 +64,7 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
             README_ZH.md
     ```
 
-4. Edit the `kafka-connect-plugins-pv` PersistentVolume resource in the `outbox-connector.yaml` file so that the `.spec.hostPath.path` property points to the `kafka-connect-plugins` folder path on the host machine that was created in the previous step. This path will be used for loading additional plugins with Connect. Use the following command to locate and verify the contents in that path if needed. For example, paths on Windows machines will start with `/mnt/c/` since Rancher Desktop is creating a bridge with the Windows filesystem to provide access. For macOS and Linux users, see [Volumes](https://docs.rancherdesktop.io/ui/preferences/virtual-machine/volumes) for more information.
+4. Move the extracted `kafka-connect-plugins` folder to `C:\Users\Public\Downloads` if using Windows. If using a different operating system, or a different path is preferred, then edit the `kafka-connect-plugins-pv` PersistentVolume resource in the `outbox-connector.yaml` file so that the `.spec.hostPath.path` property points to where the `kafka-connect-plugins` folder is located on the host machine. This path will be used for loading additional plugins with Connect. Use the following command to locate and verify the contents in that path if needed. For example, paths on Windows machines will start with `/mnt/c/` since Rancher Desktop is creating a bridge with the Windows filesystem to provide access. For macOS and Linux users, see [Volumes](https://docs.rancherdesktop.io/ui/preferences/virtual-machine/volumes) for more information.
 
     ```bash
     rdctl shell

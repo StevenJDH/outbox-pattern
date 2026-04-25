@@ -8,8 +8,8 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    # TODO: Change this path to your local path where the connector plugins are stored.
-    path: /mnt/c/Users/<USERNAME>/Downloads/kafka-connect-plugins
+    # TODO: Change this path to your local path where the connector plugins are stored if needed.
+    path: /mnt/c/Users/Public/Downloads/kafka-connect-plugins
   persistentVolumeReclaimPolicy: Retain
   volumeMode: Filesystem
   storageClassName: "" # Leave empty to avoid binding to default storage class.
