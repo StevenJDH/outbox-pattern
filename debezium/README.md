@@ -33,7 +33,7 @@ By default, Kafka Connect does not include the Confluent dependencies required f
 
     📝 **Note:** The `-Dconfluent.version=7.9.5` flag is used to target a particular Schema Registry/[AvroConverter](https://mvnrepository.com/artifact/io.confluent/kafka-connect-avro-converter) version that is compatible with the Kafka version being used. See [Confluent Platform and Apache Kafka compatibility](https://docs.confluent.io/platform/current/installation/versions-interoperability.html#cp-and-apache-ak-compatibility) for the compatibility matrix.
 
-2. The `confluent-avro` plugin folder should have now been created. Keep the version number in the folder name as this will be important for supporting rolling updates.
+2. The `confluent-avro-x.x.x` plugin folder should have now been created. Keep the version number in the folder name as this will be important for supporting rolling updates.
 
 3. Decide on where the folder will be used. For example, if it will be included with the custom image discussed in the previous section, then open the [Dockerfile](./Dockerfile) for editing, and uncomment the indicated line towards the bottom. For referencing it externally, follow a similar approach to [Step 4](https://github.com/StevenJDH/outbox-pattern/tree/main/kubernetes#configuration-steps) of the Kubernetes setup.
 

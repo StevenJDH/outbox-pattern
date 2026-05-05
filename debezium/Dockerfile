@@ -10,11 +10,12 @@ FROM quay.io/strimzi/kafka:${STRIMZI_VERSION}
 
 USER root:root
 
+# Release and changelog: https://debezium.io/releases/3.1/
 ARG DEBEZIUM_CONNECTOR_VERSION=3.1.1.Final
 WORKDIR /opt/kafka/plugins/
 RUN curl -sfSL "https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/${DEBEZIUM_CONNECTOR_VERSION}/debezium-connector-postgres-${DEBEZIUM_CONNECTOR_VERSION}-plugin.tar.gz" | tar xz
 
-# OPTIONAL: Uncomment the following line to include the Confluent Avro Converter and its dependencies to the image.
+# OPTIONAL: Uncomment the following line to include the Confluent Avro Converter and its dependencies in the image.
 # COPY confluent-avro/ confluent-avro/
 
 USER 1001
