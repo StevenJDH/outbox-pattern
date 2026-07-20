@@ -9,9 +9,9 @@
 
 package io.github.stevenjdh.examples.outboxpattern.infrastructure.messaging.outbox.serialization;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import io.hypersistence.utils.hibernate.type.json.JsonNodeBinaryType;
 import org.hibernate.type.AbstractSingleColumnStandardBasicType;
+import tools.jackson.databind.JsonNode;
 
 /**
  * The class io.hypersistence.utils.hibernate.type.json.JsonBinaryType requires knowledge of the Java

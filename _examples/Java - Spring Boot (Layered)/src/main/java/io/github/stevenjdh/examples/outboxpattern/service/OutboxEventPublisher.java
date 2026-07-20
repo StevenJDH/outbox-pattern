@@ -9,13 +9,13 @@
 
 package io.github.stevenjdh.examples.outboxpattern.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.stevenjdh.examples.outboxpattern.mapper.OutboxEventMapper;
 import io.github.stevenjdh.examples.outboxpattern.event.abstraction.OutboxEvent;
 import io.github.stevenjdh.examples.outboxpattern.repository.OutboxEventJpaRepository;
 import io.github.stevenjdh.examples.outboxpattern.repository.entity.OutboxEventEntity;
 import io.micrometer.observation.annotation.Observed;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.ObjectMapper;
 
 @Service
 public class OutboxEventPublisher {

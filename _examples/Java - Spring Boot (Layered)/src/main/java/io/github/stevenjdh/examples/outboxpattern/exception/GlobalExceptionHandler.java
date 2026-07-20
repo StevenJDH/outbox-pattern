@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
                                                                        HttpServletRequest request) {
 
         Map<String, String> validationErrors = new HashMap<>();
-        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        HttpStatus status = HttpStatus.UNPROCESSABLE_CONTENT;
 
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String field = ((FieldError) error).getField();
@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDTO> handleIllegalArgumentException(IllegalArgumentException ex,
                                                                            HttpServletRequest request) {
 
-        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        HttpStatus status = HttpStatus.UNPROCESSABLE_CONTENT;
         LOG.error("HTTP Code [{}] - {}", status.value(), ex.getMessage());
         return buildErrorResponse(status, ex.getMessage(), request);
     }

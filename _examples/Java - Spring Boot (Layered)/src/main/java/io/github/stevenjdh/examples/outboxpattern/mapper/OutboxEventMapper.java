@@ -9,7 +9,6 @@
 
 package io.github.stevenjdh.examples.outboxpattern.mapper;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.stevenjdh.examples.outboxpattern.event.abstraction.OutboxEvent;
 import io.github.stevenjdh.examples.outboxpattern.repository.entity.OutboxEventEntity;
 import io.opentelemetry.api.baggage.Baggage;
@@ -17,6 +16,7 @@ import java.util.UUID;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import tools.jackson.databind.ObjectMapper;
 
 @Mapper(componentModel = "spring", imports = UUID.class)
 public interface OutboxEventMapper {

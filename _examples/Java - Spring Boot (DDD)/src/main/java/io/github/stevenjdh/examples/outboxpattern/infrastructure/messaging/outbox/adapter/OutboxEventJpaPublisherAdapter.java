@@ -9,7 +9,6 @@
 
 package io.github.stevenjdh.examples.outboxpattern.infrastructure.messaging.outbox.adapter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.stevenjdh.examples.outboxpattern.domain.shared.event.OutboxEvent;
 import io.github.stevenjdh.examples.outboxpattern.domain.shared.event.OutboxEventPublisher;
 import io.github.stevenjdh.examples.outboxpattern.infrastructure.messaging.outbox.mapper.OutboxEventMapper;
@@ -17,6 +16,7 @@ import io.github.stevenjdh.examples.outboxpattern.infrastructure.messaging.outbo
 import io.github.stevenjdh.examples.outboxpattern.infrastructure.messaging.outbox.entity.OutboxEventEntity;
 import io.micrometer.observation.annotation.Observed;
 import org.springframework.stereotype.Repository;
+import tools.jackson.databind.ObjectMapper;
 
 @Repository
 public class OutboxEventJpaPublisherAdapter implements OutboxEventPublisher {
