@@ -22,7 +22,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /**
  * Custom management endpoint for info, which is more expressive than the
- * quarkus-info extension. This make it work more like Actuator in Spring Boot.
+ * quarkus-info extension. This makes it work more like Actuator in Spring Boot.
  */
 @Singleton
 public class InfoRoute {
