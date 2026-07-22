@@ -47,7 +47,7 @@ quarkus:
     payload:
        name: payload
        column-definition: JSONB
-       type: io.github.stevenjdh.examples.outboxpattern.serialization.PayloadJsonBinaryType
+       type: io.hypersistence.utils.hibernate.type.json.JsonNodeBinaryType
     timestamp:
       name: timestamp
     tracing-span:
