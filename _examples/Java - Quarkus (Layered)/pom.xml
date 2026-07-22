@@ -30,17 +30,9 @@
         <skipITs>true</skipITs>
         <skipGitCommitId>false</skipGitCommitId>
         <!-- Dependency versions -->
-        <!-- 
-            The debezium-quarkus-outbox dependency is incompatible with Hibernate 7,
-            which was introduced with the Quarkus 3.24 release. A ticket for the
-            NoSuchMethodError with Hibernate 7 is being worked on. Version 3.3.x of
-            debezium-quarkus-outbox will likely have the fix.
-            Reference: https://issues.redhat.com/browse/DBZ-9193
-        -->
         <quarkus.platform.version>3.37.2</quarkus.platform.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <hypersistence-utils.version>3.15.4</hypersistence-utils.version>
-        <jackson-databind.version>3.2.1</jackson-databind.version>
         <assertj-core.version>3.27.4</assertj-core.version>
         <!-- Plugin Versions -->
         <compiler-plugin.version>3.14.0</compiler-plugin.version>
@@ -85,9 +77,13 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-orm-panache</artifactId>
         </dependency>
+        <!-- 
+            Workaround. Not using hypersistence-utils-hibernate-73 for Hibernate 7.4 because
+            that uses Jackson 3x and Quarkus is still using 2x.
+          -->
         <dependency>
             <groupId>io.hypersistence</groupId>
-            <artifactId>hypersistence-utils-hibernate-73</artifactId>
+            <artifactId>hypersistence-utils-hibernate-71</artifactId>
             <version>${hypersistence-utils.version}</version>
         </dependency>
         <dependency>
@@ -112,12 +108,6 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-orm</artifactId>
-        </dependency>
-        <!-- Workaround for PayloadJsonBinaryType class needing Jackson 3x. -->
-        <dependency>
-            <groupId>tools.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson-databind.version}</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
