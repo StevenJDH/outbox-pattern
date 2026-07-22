@@ -7,7 +7,7 @@
 
 services:
   kafka:
-    image: confluentinc/cp-kafka:7.9.0
+    image: confluentinc/cp-kafka:8.2.2
     hostname: kafka
     user: root
     ports:
@@ -37,7 +37,7 @@ services:
       - kafka_data:/tmp/kraft-combined-logs
 
   postgres:
-    image: debezium/postgres:17
+    image: quay.io/debezium/postgres:18-alpine
     hostname: postgres
     ports:
       - "5432:5432"
@@ -59,7 +59,7 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   debezium:
-    image: debezium/connect:3.0.0.Final
+    image: quay.io/debezium/connect:3.5.2.Final
     hostname: debezium
     depends_on:
       kafka:
@@ -99,7 +99,7 @@ services:
       - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
 
   debezium-configurer:
-    image: curlimages/curl:8.15.0
+    image: curlimages/curl:8.21.0
     depends_on:
       postgres:
         condition: service_healthy
@@ -117,7 +117,7 @@ services:
       - ./init-connector.json:/init-connector.json
 
   schemaregistry:
-    image: confluentinc/cp-schema-registry:7.9.0
+    image: confluentinc/cp-schema-registry:8.2.2
     hostname: schemaregistry
     ports:
       - "8081:8081"
@@ -140,7 +140,7 @@ services:
       start_period: 20s
 
   # akhq:
-  #   image: tchiotludo/akhq:0.25.1
+  #   image: tchiotludo/akhq:0.27.1
   #   hostname: akhq
   #   ports:
   #     - "8080:8080"
@@ -174,7 +174,7 @@ services:
   # The image (provectuslabs/kafka-ui) is now forked to https://github.com/kafbat/kafka-ui.
   # Reference: https://github.com/provectus/kafka-ui/issues/4502
   kafka-ui:
-    image: kafbat/kafka-ui:v1.4.2
+    image: kafbat/kafka-ui:v1.5.0
     hostname: kafbat-ui
     ports:
       - "8080:8080"
@@ -195,7 +195,7 @@ services:
       KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://debezium:8083
 
   zipkin:
-    image: openzipkin/zipkin:3.5.1
+    image: openzipkin/zipkin:3.6.1
     hostname: zipkin
     ports:
       # Using port 9412 on the host for UI to avoid port
@@ -211,7 +211,7 @@ services:
   
   # Used for OTLP → Collector → Zipkin to keep app OTLP-native.
   otel-collector:
-    image: otel/opentelemetry-collector:0.132.2
+    image: otel/opentelemetry-collector:0.156.0
     hostname: otel-collector
     ports:
       - "4317:4317" # OTLP/gRPC
@@ -225,7 +225,7 @@ services:
 
   # Health check done here because otel-collector does not have curl, wget, nc, or similar tools. 
   otel-collector-healthcheck:
-    image: nginx:1.29.1-alpine-slim
+    image: nginx:1.30.4-alpine-slim
     depends_on:
       - otel-collector
     healthcheck:
