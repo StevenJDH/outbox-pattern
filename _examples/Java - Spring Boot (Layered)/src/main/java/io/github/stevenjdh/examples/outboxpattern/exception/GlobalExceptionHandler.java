@@ -24,7 +24,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -50,16 +50,13 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(status, message + ".", request, validationErrors);
     }
     
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ErrorResponseDTO> handleNoHandlerFoundException(NoHandlerFoundException ex,
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleNoResourceFoundException(NoResourceFoundException ex,
                                                                           HttpServletRequest request) {
         
         HttpStatus status = HttpStatus.NOT_FOUND;
-        String message = "The requested resource was not found";
-        LOG.error("HTTP Code [{}] - {}: [{} {}]", status.value(), message,
-                request.getMethod(), request.getRequestURI());
-
-        return buildErrorResponse(status, message + ".", request);
+        LOG.error("HTTP Code [{}] - {}", status.value(), ex.getMessage());
+        return buildErrorResponse(status, ex.getMessage(), request);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
