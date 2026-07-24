@@ -55,8 +55,11 @@ public class GlobalExceptionHandler {
                                                                           HttpServletRequest request) {
         
         HttpStatus status = HttpStatus.NOT_FOUND;
-        LOG.error("HTTP Code [{}] - {}", status.value(), ex.getMessage());
-        return buildErrorResponse(status, ex.getMessage(), request);
+        String message = "The requested resource was not found";
+        LOG.error("HTTP Code [{}] - {}: [{} {}]", status.value(), message,
+                request.getMethod(), request.getRequestURI());
+
+        return buildErrorResponse(status, message + ".", request);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
