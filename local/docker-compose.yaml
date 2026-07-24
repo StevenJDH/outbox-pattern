@@ -195,6 +195,8 @@ services:
       KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://debezium:8083
 
   zipkin:
+    # Migrate to ghcr.io/openzipkin-contrib/zipkin-otel by December 2026.
+    # Reference: https://github.com/openzipkin-contrib/zipkin-otel/blob/main/docker/README.md
     image: openzipkin/zipkin:3.6.1
     hostname: zipkin
     ports:

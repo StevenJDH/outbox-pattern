@@ -7,6 +7,8 @@ receivers:
         endpoint: 0.0.0.0:4318
 
 exporters:
+  # Support for the zipkin exporter will be removed in December 2026 https://opentelemetry.io/docs/specs/otel/trace/sdk_exporters/zipkin/.
+  # There's a zipkin-otel image to support otel as an alternative https://github.com/openzipkin-contrib/zipkin-otel.
   zipkin:
     endpoint: "http://zipkin:9411/api/v2/spans"
 
@@ -27,6 +29,7 @@ processors:
         - 'resource.attributes["service.name"] == "debezium-connect" and attributes["http.route"] == "/"'
         - 'resource.attributes["service.name"] == "debezium-connect" and attributes["http.route"] == "/connectors"'
         - 'resource.attributes["service.name"] == "debezium-connect" and attributes["db.operation"] == "SELECT"'
+        - 'resource.attributes["host.name"] == "debezium" and attributes["http.request.method"] == "GET"'
 
 service:
   extensions: [health_check]
