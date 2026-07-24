@@ -33,12 +33,12 @@
         <quarkus.platform.version>3.37.2</quarkus.platform.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <hypersistence-utils.version>3.15.4</hypersistence-utils.version>
-        <assertj-core.version>3.27.4</assertj-core.version>
+        <assertj-core.version>3.27.7</assertj-core.version>
         <!-- Plugin Versions -->
-        <compiler-plugin.version>3.14.0</compiler-plugin.version>
-        <surefire-plugin.version>3.5.2</surefire-plugin.version>
-        <git-commit-id.version>9.0.2</git-commit-id.version>
-        <maven-enforcer.version>3.6.1</maven-enforcer.version>
+        <compiler-plugin.version>3.15.0</compiler-plugin.version>
+        <surefire-plugin.version>3.5.6</surefire-plugin.version>
+        <git-commit-id.version>10.0.0</git-commit-id.version>
+        <maven-enforcer.version>3.6.3</maven-enforcer.version>
     </properties>
 
     <dependencyManagement>
@@ -181,6 +181,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire-plugin.version}</version>
                 <configuration>
+                    <argLine>@{argLine}</argLine>
                     <systemPropertyVariables>
                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                         <maven.home>${maven.home}</maven.home>
@@ -199,6 +200,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <argLine>@{argLine}</argLine>
                     <systemPropertyVariables>
                         <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
@@ -283,6 +285,7 @@
                 </property>
             </activation>
             <properties>
+                <quarkus.package.jar.enabled>false</quarkus.package.jar.enabled>
                 <skipITs>false</skipITs>
                 <quarkus.native.enabled>true</quarkus.native.enabled>
             </properties>

@@ -37,18 +37,13 @@
         <!-- Dependency versions -->
         <mapstruct.version>1.6.3</mapstruct.version>
         <hypersistence-utils.version>3.15.4</hypersistence-utils.version>
-        <logback-ecs-encoder.version>1.7.0</logback-ecs-encoder.version>
+        <logback-ecs-encoder.version>1.8.0</logback-ecs-encoder.version>
         <!-- Plugin Versions -->
-        <git-commit-id.version>9.0.2</git-commit-id.version>
-        <maven-enforcer.version>3.6.1</maven-enforcer.version>
+        <git-commit-id.version>10.0.0</git-commit-id.version>
+        <maven-enforcer.version>3.6.3</maven-enforcer.version>
     </properties>
     
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-properties-migrator</artifactId>
-            <scope>compile</scope>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc</artifactId>
