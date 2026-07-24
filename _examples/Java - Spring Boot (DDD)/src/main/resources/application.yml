@@ -106,6 +106,10 @@ management:
         otlp:
            endpoint: http://localhost:4317
            transport: grpc
+    # Opted to use direct config instead of the Observability API config further below.
+    resource-attributes:
+      foobar: example
+      "service.environment": ${spring.profiles.active:local}
   tracing:
     export:
       otlp:
@@ -138,12 +142,14 @@ management:
         enabled: false
   observations:
     enabled: true
-    # Global tags that are added to metrics, traces (spans), and logs for filtering.
-    key-values:
-      foobar: example
-      "service.environment": ${spring.profiles.active:local}
-    # Resource label for the source of data that is used by OTel-natve backends.
-    resource-attributes: {}
+    annotations:
+      # Enables the use of annotations like @Observed, @NewSpan, @Timed, @Counted, @MeterTag, etc.
+      enabled: true
+    # Specific metadata (low-cardinality) about the request that is added only to the initial root observation.
+    # This is best done programmatically to set details from the request.
+    #key-values: {}
+    # Global resource tags (high-cardinality) that are added to metrics, traces (spans), and logs for filtering by OTel-native backends.
+    #resource-attributes: {}
 
 logging:
   pattern:
