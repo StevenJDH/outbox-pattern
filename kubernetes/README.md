@@ -10,7 +10,7 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
 ## Prerequisites
 
 * [Rancher Desktop](https://rancherdesktop.io) for running Kubernetes 1.25+ (depends on Strimzi version) locally.
-* [Helm CLI](https://helm.sh/docs/intro/install/) 3x installed.
+* [Helm CLI](https://helm.sh/docs/intro/install/) 4.2+ installed.
 * [Kubectl CLI](https://kubernetes.io/docs/tasks/tools/#kubectl) installed and configured to access the cluster.
 * [Strimzi](https://artifacthub.io/packages/olm/community-operators/strimzi-kafka-operator) 0.45+ Helm Chart (version tested).
 * [Bitnami PostgreSQL](https://artifacthub.io/packages/helm/bitnami/postgresql) 18+ Helm Chart or equivalent.
@@ -28,7 +28,7 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
         -f ./config/strimzi/values.yaml \
         --namespace strimzi \
         --create-namespace \
-        --atomic
+        --rollback-on-failure
     ```
 
 2. Install the PostgreSQL database server.
@@ -36,9 +36,9 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
     ```bash
     helm upgrade --install my-postgresql oci://registry-1.docker.io/bitnamicharts/postgresql --version 18.8.0 \
         -f ./config/postgresql/values.yaml \
-        --set-file primary.initdb.scripts.init\\.sql=../local/init.sql \
+        --set-file "primary.initdb.scripts.init\.sql=../local/init.sql" \
         --namespace strimzi \
-        --atomic
+        --rollback-on-failure
     ```
 
     Use something like [DBeaver Community](https://dbeaver.io/download/) to explore the `orders_db` database and for directly testing the `outbox_event` table using port forwarding, `kubectl port-forward svc/my-postgresql-hl 5432:5432 -n strimzi`.
@@ -118,7 +118,7 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
     helm upgrade --install kafka-ui kafbat/kafka-ui --version 1.6.4 \
         -f ./config/kafka-ui/values.yaml \
         --namespace strimzi \
-        --atomic
+        --rollback-on-failure
     ```
 
     Use port forwarding to access the UI, `kubectl port-forward svc/kafka-ui 8080:80 -n strimzi`.
