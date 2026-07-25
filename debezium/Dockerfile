@@ -10,8 +10,8 @@ FROM quay.io/strimzi/kafka:${STRIMZI_VERSION}
 
 USER root:root
 
-# Release and changelog: https://debezium.io/releases/3.1/
-ARG DEBEZIUM_CONNECTOR_VERSION=3.1.1.Final
+# Release and changelog: https://debezium.io/releases/3.5/
+ARG DEBEZIUM_CONNECTOR_VERSION=3.5.2.Final
 WORKDIR /opt/kafka/plugins/
 RUN curl -sfSL "https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/${DEBEZIUM_CONNECTOR_VERSION}/debezium-connector-postgres-${DEBEZIUM_CONNECTOR_VERSION}-plugin.tar.gz" | tar xz
 

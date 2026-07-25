@@ -17,9 +17,9 @@ As an alternative to loading connector plugins dynamically as seen in the [Kuber
 The following commands can help build and push the customized image to a container registry. Do keep in mind that, although this example uses the `latest-kafka-3.9.0` tag for the base image, in practice, it's better to use the more explicit `0.45.0-kafka-3.9.0` tag to avoid issues with the Strimzi Operator.
 
 ```bash
-nerdctl/docker build -t debezium-connect . [--build-arg STRIMZI_VERSION=latest-kafka-3.9.0 --build-arg DEBEZIUM_CONNECTOR_VERSION=3.1.1.Final]
-nerdctl/docker tag debezium-connect:latest <my-container-registry>/debezium-connect:3.1.1.Final-kafka-3.9.0
-nerdctl/docker push <my-container-registry>/debezium-connect:3.1.1.Final-kafka-3.9.0
+nerdctl/docker build -t debezium-connect . [--build-arg STRIMZI_VERSION=latest-kafka-3.9.0 --build-arg DEBEZIUM_CONNECTOR_VERSION=3.5.2.Final]
+nerdctl/docker tag debezium-connect:latest <my-container-registry>/debezium-connect:3.5.2.Final-kafka-3.9.0
+nerdctl/docker push <my-container-registry>/debezium-connect:3.5.2.Final-kafka-3.9.0
 ```
 
 ## Confluent Schema Registry and Avro support
