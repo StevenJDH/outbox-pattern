@@ -94,8 +94,8 @@ services:
       retries: 12
       start_period: 15s
     volumes:
-      # Using version v2.19.0 of the OpenTelemetry Agent.
-      # Source: https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v2.19.0/opentelemetry-javaagent.jar
+      # Using version v2.30.0 of the OpenTelemetry Agent, which targets OpenTelemetry SDK 1.64.0.
+      # Source: https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v2.30.0/opentelemetry-javaagent.jar
       - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
 
   debezium-configurer:
@@ -195,15 +195,15 @@ services:
       KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://debezium:8083
 
   zipkin:
-    # Migrate to ghcr.io/openzipkin-contrib/zipkin-otel by December 2026.
+    # Using zipkin-otel instead of openzipkin/zipkin because the zipkin otel-collector exporter will be removed in December 2026.
     # Reference: https://github.com/openzipkin-contrib/zipkin-otel/blob/main/docker/README.md
-    image: openzipkin/zipkin:3.6.1
+    image: ghcr.io/openzipkin-contrib/zipkin-otel:0.3.0 # Based on Zipkin 3.6.0.
     hostname: zipkin
     ports:
       # Using port 9412 on the host for UI to avoid port
       # conflict with host-switch.exe from Rancher Desktop
       # in case of already running Dapr setup.
-      - "9412:9411"
+      - "9412:9411" # UI & OTLP/HTTP
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://zipkin:9411/health"]
       interval: 10s
@@ -211,7 +211,7 @@ services:
       retries: 12
       start_period: 15s
   
-  # Used for OTLP → Collector → Zipkin to keep app OTLP-native.
+  # Used for OTLP → Collector → Zipkin to keep app OTLP-native and to support more backends.
   otel-collector:
     image: otel/opentelemetry-collector:0.156.0
     hostname: otel-collector
