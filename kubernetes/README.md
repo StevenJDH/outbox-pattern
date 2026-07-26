@@ -78,6 +78,7 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
 4. Move the extracted `kafka-connect-plugins` folder to `C:\Users\Public\Downloads` if using Windows. If using a different operating system, or a different path is preferred, then edit the `kafka-connect-plugins-pv` PersistentVolume resource in the `outbox-connector.yaml` file so that the `.spec.hostPath.path` property points to where the `kafka-connect-plugins` folder is located on the host machine. This path will be used for loading additional plugins with Connect. Use the following command to locate and verify the contents in that path if needed. For example, paths on Windows machines will start with `/mnt/c/` since Rancher Desktop is creating a bridge with the Windows filesystem to provide access. For macOS and Linux users, see [Volumes](https://docs.rancherdesktop.io/ui/preferences/virtual-machine/volumes) for more information.
 
     ```bash
+    # Opens the Rancher Desktop shell environment.
     rdctl shell
     ```
 
@@ -109,6 +110,9 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
     networkpolicy.networking.k8s.io/allow-kafkaui-to-kafkaconnect created
     kafkaconnector.kafka.strimzi.io/outbox-connector created
     ```
+
+> [!IMPORTANT]  
+> For Strimzi versions newer than 0.51.0, replace all instances of `v1beta2` with `v1` in the `outbox-connector.yaml` file before running the command above. This API version change is compatible with Strimzi 0.51.0 and later.
 
 6. Install kafbat/kafka-ui to make it easier to explore topics and connector resources.
 
