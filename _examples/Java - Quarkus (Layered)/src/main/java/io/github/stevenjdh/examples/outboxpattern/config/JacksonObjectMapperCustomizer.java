@@ -20,7 +20,7 @@ public class JacksonObjectMapperCustomizer implements ObjectMapperCustomizer {
     
     @Override
     public void customize(ObjectMapper mapper) {
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
+        mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL)
                 .setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 }

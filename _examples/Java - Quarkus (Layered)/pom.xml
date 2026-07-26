@@ -16,6 +16,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <name>Quarkus Outbox Pattern (Layered)</name>
     <description>A demo project for the Outbox pattern.</description>
+    <packaging>quarkus</packaging>
 
     <properties>
         <java.version>21</java.version>
@@ -29,22 +30,15 @@
         <skipITs>true</skipITs>
         <skipGitCommitId>false</skipGitCommitId>
         <!-- Dependency versions -->
-        <!-- 
-            The debezium-quarkus-outbox dependency is incompatible with Hibernate 7,
-            which was introduced with the Quarkus 3.24 release. A ticket for the
-            NoSuchMethodError with Hibernate 7 is being worked on. Version 3.3.x of
-            debezium-quarkus-outbox will likely have the fix.
-            Reference: https://issues.redhat.com/browse/DBZ-9193
-        -->
-        <quarkus.platform.version>3.23.4</quarkus.platform.version>
+        <quarkus.platform.version>3.37.2</quarkus.platform.version>
         <mapstruct.version>1.6.3</mapstruct.version>
-        <hypersistence-utils.version>3.9.10</hypersistence-utils.version>
-        <assertj-core.version>3.27.4</assertj-core.version>
+        <hypersistence-utils.version>3.15.4</hypersistence-utils.version>
+        <assertj-core.version>3.27.7</assertj-core.version>
         <!-- Plugin Versions -->
-        <compiler-plugin.version>3.14.0</compiler-plugin.version>
-        <surefire-plugin.version>3.5.2</surefire-plugin.version>
-        <git-commit-id.version>9.0.2</git-commit-id.version>
-        <maven-enforcer.version>3.6.1</maven-enforcer.version>
+        <compiler-plugin.version>3.15.0</compiler-plugin.version>
+        <surefire-plugin.version>3.5.6</surefire-plugin.version>
+        <git-commit-id.version>10.0.0</git-commit-id.version>
+        <maven-enforcer.version>3.6.3</maven-enforcer.version>
     </properties>
 
     <dependencyManagement>
@@ -83,9 +77,13 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-orm-panache</artifactId>
         </dependency>
+        <!-- 
+            Workaround. Not using hypersistence-utils-hibernate-73 for Hibernate 7.4 because
+            that uses Jackson 3x and Quarkus is still using 2x.
+          -->
         <dependency>
             <groupId>io.hypersistence</groupId>
-            <artifactId>hypersistence-utils-hibernate-63</artifactId>
+            <artifactId>hypersistence-utils-hibernate-71</artifactId>
             <version>${hypersistence-utils.version}</version>
         </dependency>
         <dependency>
@@ -134,7 +132,7 @@
 
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-junit5</artifactId>
+            <artifactId>quarkus-junit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -146,6 +144,11 @@
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-junit-mockito</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -162,16 +165,6 @@
                 <artifactId>quarkus-maven-plugin</artifactId>
                 <version>${quarkus.platform.version}</version>
                 <extensions>true</extensions>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>build</goal>
-                            <goal>generate-code</goal>
-                            <goal>generate-code-tests</goal>
-                            <goal>native-image-agent</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -188,6 +181,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire-plugin.version}</version>
                 <configuration>
+                    <argLine>@{argLine}</argLine>
                     <systemPropertyVariables>
                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                         <maven.home>${maven.home}</maven.home>
@@ -206,6 +200,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <argLine>@{argLine}</argLine>
                     <systemPropertyVariables>
                         <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
@@ -290,6 +285,7 @@
                 </property>
             </activation>
             <properties>
+                <quarkus.package.jar.enabled>false</quarkus.package.jar.enabled>
                 <skipITs>false</skipITs>
                 <quarkus.native.enabled>true</quarkus.native.enabled>
             </properties>

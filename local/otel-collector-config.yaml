@@ -7,18 +7,17 @@ receivers:
         endpoint: 0.0.0.0:4318
 
 exporters:
+  # Support for the zipkin exporter will be removed in December 2026 https://opentelemetry.io/docs/specs/otel/trace/sdk_exporters/zipkin/.
+  # The new zipkin-otel image supports otel (no gRPC) as the replacement https://github.com/openzipkin-contrib/zipkin-otel.
   zipkin:
     endpoint: "http://zipkin:9411/api/v2/spans"
+  otlp_http:
+    endpoint: http://zipkin:9411
 
 extensions:
   health_check:
     endpoint: "0.0.0.0:13133"
     path: "/health"
-    # For otel/opentelemetry-collector version 0.133 and newer (maybe).
-    # CheckCollectorPipeline:
-    #   Enabled: true
-    #   Interval: 5s
-    #   ExporterFailureThreshold: 1
 
 processors:
   filter/drop-healthchecks:
@@ -27,6 +26,7 @@ processors:
         - 'resource.attributes["service.name"] == "debezium-connect" and attributes["http.route"] == "/"'
         - 'resource.attributes["service.name"] == "debezium-connect" and attributes["http.route"] == "/connectors"'
         - 'resource.attributes["service.name"] == "debezium-connect" and attributes["db.operation"] == "SELECT"'
+        - 'resource.attributes["host.name"] == "debezium" and attributes["http.request.method"] == "GET"'
 
 service:
   extensions: [health_check]
@@ -34,4 +34,5 @@ service:
     traces:
       receivers: [otlp]
       processors: [filter/drop-healthchecks]
-      exporters: [zipkin]
+      # Replace 'otlp_http' with 'zipkin' if you want to use the zipkin exporter instead of the otlp_http exporter.
+      exporters: [otlp_http]

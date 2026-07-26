@@ -7,6 +7,8 @@ spring:
     username: postgres
     password: password
   jpa:
+    # Explicitly enabling to hide warning message.
+    open-in-view: true
     hibernate:
       ddl-auto: validate
     properties:
@@ -22,12 +24,6 @@ spring:
     default-property-inclusion: non_null
     # Optional: Use UTC timezone for timestamps (default).
     time-zone: UTC
-  mvc:
-    # Enables NoHandlerFoundException for 404 errors. Set also spring.web.resources.add-mappings to false.
-    throw-exception-if-no-handler-found: true
-  web:
-   resources:
-     add-mappings: false
   lifecycle:
     # Works with server.shutdown to define maximum time before forcing shutdown. (Default: 30s)
     timeout-per-shutdown-phase: 30s
@@ -53,7 +49,8 @@ management:
   server:
     port: 9081
   endpoints:
-    enabled-by-default: false
+    access:
+      default: none
     web:
       base-path: /management
       exposure:
@@ -78,14 +75,19 @@ management:
       enabled: true
     prometheus:
       enabled: true
+  defaults:
+    metrics:
+      export:
+        enabled: true
+  simple:
+    metrics:
+      export:
+        enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
   metrics:
-    export:
-      defaults:
-        enabled: true
-      simple:
-        enabled: true
-      prometheus:
-        enabled: true
     enable:
       all: false
       jvm.memory: true
@@ -96,14 +98,22 @@ management:
       jdbc: true
       hikaricp: true
       outboxpattern: true
-  otlp:
+  opentelemetry:
+    enabled: true
     tracing:
-      endpoint: http://localhost:4317
-      transport: grpc
       export:
         enabled: true
+        otlp:
+           endpoint: http://localhost:4317
+           transport: grpc
+    # Opted to use direct config instead of the Observability API config further below.
+    resource-attributes:
+      foobar: example
+      "service.environment": ${spring.profiles.active:local}
   tracing:
-    enabled: true
+    export:
+      otlp:
+        enabled: true
     propagation:
         # Combines produce and consume properties into one.
         # Opted to not support legacy B3 standard.
@@ -125,14 +135,21 @@ management:
       # NOTE: Currently there is a bug in the framework that doesn't add these. I've implemented
       # a workaround, so you can ignore the log entry 'Will propagate new baggage context for entries {}'.
       tag-fields: promo,region
+  otlp:
+    metrics:
+      export:
+        # Not exporting metrics to OpenTelemetry Collector, so disabling as it is on by default.
+        enabled: false
   observations:
     enabled: true
-    # Global tags that are added to metrics, traces (spans), and logs for filtering.
-    key-values:
-      foobar: example
-      "service.environment": ${spring.profiles.active:local}
-    # Resource label for the source of data that is used by OTel-natve backends.
-    resource-attributes: {}
+    annotations:
+      # Enables the use of annotations like @Observed, @NewSpan, @Timed, @Counted, @MeterTag, etc.
+      enabled: true
+    # Specific metadata (low-cardinality) about the request that is added only to the initial root observation.
+    # This is best done programmatically to set details from the request.
+    #key-values: {}
+    # Global resource tags (high-cardinality) that are added to metrics, traces (spans), and logs for filtering by OTel-native backends.
+    #resource-attributes: {}
 
 logging:
   pattern:
@@ -145,6 +162,7 @@ logging:
     path: ./target/logs
   level:
     # Shows the connection mode used by the OTLP exporter on bootup.
+    # Ignore the using UnsafeStringEncoder for performance message.
     io.opentelemetry.exporter: DEBUG
     
     # Uncomment the below to see important details about the handling of baggage,

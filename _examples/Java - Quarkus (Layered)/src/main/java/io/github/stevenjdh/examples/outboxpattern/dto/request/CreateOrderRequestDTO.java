@@ -20,7 +20,7 @@ import java.util.List;
 
 public record CreateOrderRequestDTO(
     @Valid @NotNull CustomerDto customer,
-    @Valid @NotNull @Size(min = 1, max = 10) List<OrderItemDto> items
+    @NotNull @Size(min = 1, max = 10) List<@Valid @NotNull OrderItemDto> items
 ) {
     public record CustomerDto(
         @NotBlank String id,

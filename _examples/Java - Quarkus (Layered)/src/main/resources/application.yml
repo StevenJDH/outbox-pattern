@@ -1,6 +1,8 @@
 quarkus:
   application:
     name: outbox-pattern
+  console:
+    color: true
   banner:
     # Disabled to use custom banner section below that emulates Spring Boot's banner functionality.
     enabled: false
@@ -22,12 +24,14 @@ quarkus:
     # signals and lets beans close properly, including connection pools. (Default: 0S).
     timeout: 30S
   hibernate-orm:
-    database:
-      generation: validate
+    schema-management:
+      strategy: validate
     physical-naming-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     log:
       sql: false
       bind-parameters: false
+    metrics:
+      enabled: true
   jackson:
     write-dates-as-timestamps: false
   debezium-outbox:
@@ -43,7 +47,7 @@ quarkus:
     payload:
        name: payload
        column-definition: JSONB
-       type: io.github.stevenjdh.examples.outboxpattern.serialization.PayloadJsonBinaryType
+       type: io.hypersistence.utils.hibernate.type.json.JsonNodeBinaryType
     timestamp:
       name: timestamp
     tracing-span:
@@ -92,13 +96,12 @@ quarkus:
   log:
     level: INFO
     console:
-      enable: true
+      enabled: true
       format: ${logging.pattern.console}
-      color: true
       json:
         enabled: false
     file:
-      enable: true
+      enabled: true
       format: ${logging.pattern.file}
       # Normally something like: /usr/share/applog, but leaving default path because changes
       # seem to only apply later in the execution chain in Quarkus.

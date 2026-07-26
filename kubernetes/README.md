@@ -10,10 +10,10 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
 ## Prerequisites
 
 * [Rancher Desktop](https://rancherdesktop.io) for running Kubernetes 1.25+ (depends on Strimzi version) locally.
-* [Helm CLI](https://helm.sh/docs/intro/install/) 3x installed.
+* [Helm CLI](https://helm.sh/docs/intro/install/) 4.2+ installed.
 * [Kubectl CLI](https://kubernetes.io/docs/tasks/tools/#kubectl) installed and configured to access the cluster.
 * [Strimzi](https://artifacthub.io/packages/olm/community-operators/strimzi-kafka-operator) 0.45+ Helm Chart (version tested).
-* [Bitnami PostgreSQL](https://artifacthub.io/packages/helm/bitnami/postgresql) 16+ Helm Chart or equivalent.
+* [Bitnami PostgreSQL](https://artifacthub.io/packages/helm/bitnami/postgresql) 18+ Helm Chart or equivalent.
 * [DBeaver Community](https://dbeaver.io) 25+ or equivalent tool for accessing PostgreSQL database.
 * A strong cup of coffee ☕😏.
 
@@ -28,45 +28,57 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
         -f ./config/strimzi/values.yaml \
         --namespace strimzi \
         --create-namespace \
-        --atomic
+        --rollback-on-failure
     ```
 
 2. Install the PostgreSQL database server.
 
     ```bash
-    helm upgrade --install my-postgresql oci://registry-1.docker.io/bitnamicharts/postgresql --version 16.6.6 \
+    helm upgrade --install my-postgresql oci://registry-1.docker.io/bitnamicharts/postgresql --version 18.8.0 \
         -f ./config/postgresql/values.yaml \
-        --set-file primary.initdb.scripts.init\\.sql=../local/init.sql \
+        --set-file "primary.initdb.scripts.init\.sql=../local/init.sql" \
         --namespace strimzi \
-        --atomic
+        --rollback-on-failure
     ```
 
     Use something like [DBeaver Community](https://dbeaver.io/download/) to explore the `orders_db` database and for directly testing the `outbox_event` table using port forwarding, `kubectl port-forward svc/my-postgresql-hl 5432:5432 -n strimzi`.
 
-3. Download the [debezium-connector-postgres](https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/3.1.1.Final/debezium-connector-postgres-3.1.1.Final-plugin.tar.gz) plugin, and decompress its contents to a folder called `kafka-connect-plugins/debezium-connector-postgres-3.1.1.Final`. It is important to use the version number in the folder name to support rolling updates.
+3. Download the [debezium-connector-postgres](https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/3.5.2.Final/debezium-connector-postgres-3.5.2.Final-plugin.tar.gz) plugin, and decompress its contents to a folder called `kafka-connect-plugins/debezium-connector-postgres-3.5.2.Final`. It is important to use the version number in the folder name to support rolling updates.
 
     ```text
     kafka-connect-plugins/
-    └───debezium-connector-postgres-3.1.1.Final/
+    └───debezium-connector-postgres-3.5.2.Final/
             CHANGELOG.md
-            CONTRIBUTE.md
+            connect-api-4.1.2.jar
+            CONTRIBUTING.md
             COPYRIGHT.txt
-            debezium-api-3.1.1.Final.jar
-            debezium-connector-postgres-3.1.1.Final.jar
-            debezium-core-3.1.1.Final.jar
+            debezium-api-3.5.2.Final.jar
+            debezium-config-3.5.2.Final.jar
+            debezium-connect-plugins-3.5.2.Final.jar
+            debezium-connector-common-3.5.2.Final.jar
+            debezium-connector-postgres-3.5.2.Final.jar
+            debezium-openlineage-api-3.5.2.Final.jar
+            debezium-util-3.5.2.Final.jar
+            jakarta.ws.rs-api-3.1.0.jar
+            kafka-clients-4.1.2.jar
             LICENSE-3rd-PARTIES.txt
             LICENSE.txt
-            postgresql-42.6.1.jar
+            lz4-java-1.10.1.jar
+            postgresql-42.7.7.jar
             protobuf-java-3.25.5.jar
             README.md
             README_JA.md
             README_KO.md
             README_ZH.md
+            slf4j-api-1.7.36.jar
+            snappy-java-1.1.10.7.jar
+            zstd-jni-1.5.6-10.jar
     ```
 
 4. Move the extracted `kafka-connect-plugins` folder to `C:\Users\Public\Downloads` if using Windows. If using a different operating system, or a different path is preferred, then edit the `kafka-connect-plugins-pv` PersistentVolume resource in the `outbox-connector.yaml` file so that the `.spec.hostPath.path` property points to where the `kafka-connect-plugins` folder is located on the host machine. This path will be used for loading additional plugins with Connect. Use the following command to locate and verify the contents in that path if needed. For example, paths on Windows machines will start with `/mnt/c/` since Rancher Desktop is creating a bridge with the Windows filesystem to provide access. For macOS and Linux users, see [Volumes](https://docs.rancherdesktop.io/ui/preferences/virtual-machine/volumes) for more information.
 
     ```bash
+    # Opens the Rancher Desktop shell environment.
     rdctl shell
     ```
 
@@ -99,15 +111,18 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
     kafkaconnector.kafka.strimzi.io/outbox-connector created
     ```
 
+> [!IMPORTANT]  
+> For Strimzi versions newer than 0.51.0, replace all instances of `v1beta2` with `v1` in the `outbox-connector.yaml` file before running the command above. This API version change is compatible with Strimzi 0.51.0 and later.
+
 6. Install kafbat/kafka-ui to make it easier to explore topics and connector resources.
 
     ```bash
     helm repo add kafbat https://kafbat.github.io/helm-charts
     helm repo update
-    helm upgrade --install kafka-ui kafbat/kafka-ui --version 1.5.1 \
+    helm upgrade --install kafka-ui kafbat/kafka-ui --version 1.6.4 \
         -f ./config/kafka-ui/values.yaml \
         --namespace strimzi \
-        --atomic
+        --rollback-on-failure
     ```
 
     Use port forwarding to access the UI, `kubectl port-forward svc/kafka-ui 8080:80 -n strimzi`.
