@@ -27,6 +27,11 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
       CLUSTER_ID: c3RyaW16aS10ZXN0Cg==
+      # Explicitly allowing anonymous access to avoid issues when list ACLs.
+      # Reference: https://kafka.apache.org/42/security/authorization-and-acls/
+      KAFKA_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
+      KAFKA_SUPER_USERS: User:ANONYMOUS
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
     healthcheck:
       test: ["CMD-SHELL", "bash", "-c", "/usr/bin/kafka-broker-api-versions --bootstrap-server localhost:9092 > /dev/null 2>&1"]
       interval: 10s
