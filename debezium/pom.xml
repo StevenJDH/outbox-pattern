@@ -17,7 +17,7 @@
     <dependency>
       <groupId>io.confluent</groupId>
       <artifactId>kafka-connect-avro-converter</artifactId>
-      <version>${confluent.version}</version>
+      <version>${confluentVersion}</version>
     </dependency>
   </dependencies>
 

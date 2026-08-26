@@ -28,10 +28,10 @@ By default, Kafka Connect does not include the Confluent dependencies required f
 1. From the same directory where the [pom.xml](./pom.xml) is located, run the below command. This process produces a similar result to the list found in the [Debezium documentation](https://debezium.io/documentation/reference/3.5/configuration/avro.html#deploying-confluent-schema-registry-with-debezium-containers), but in a more accurate way because dependencies can change from version to version.
 
     ```bash
-    mvn dependency:copy-dependencies -DoutputDirectory=confluent-avro-7.9.5 -Dconfluent.version=7.9.5
+    mvn dependency:copy-dependencies -DoutputDirectory=confluent-avro-7.9.5 -DconfluentVersion="7.9.5"
     ```
 
-    📝 **Note:** The `-Dconfluent.version=7.9.5` flag is used to target a particular Schema Registry/[AvroConverter](https://mvnrepository.com/artifact/io.confluent/kafka-connect-avro-converter) version that is compatible with the Kafka version being used. See [Confluent Platform and Apache Kafka compatibility](https://docs.confluent.io/platform/current/installation/versions-interoperability.html#cp-and-apache-ak-compatibility) for the compatibility matrix.
+    📝 **Note:** The `-DconfluentVersion=7.9.5` flag is used to target a particular Schema Registry/[AvroConverter](https://mvnrepository.com/artifact/io.confluent/kafka-connect-avro-converter) version that is compatible with the Kafka version being used. See [Confluent Platform and Apache Kafka compatibility](https://docs.confluent.io/platform/current/installation/versions-interoperability.html#cp-and-apache-ak-compatibility) for the compatibility matrix.
 
 2. The `confluent-avro-x.x.x` plugin folder should have now been created. Keep the version number in the folder name as this will be important for supporting rolling updates.
 
