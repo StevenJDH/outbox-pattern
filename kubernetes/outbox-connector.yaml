@@ -28,7 +28,7 @@ spec:
   volumeMode: Filesystem
   storageClassName: ""  # Leave blank to match the PV, which has no class.
 ---
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaUser
 metadata:
   # No ACLs defined, so add user as super user in Kafka resource.
@@ -40,7 +40,7 @@ spec:
   authentication:
     type: tls
 ---
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaUser
 metadata:
   # No ACLs defined, so add user as super user in Kafka resource.
@@ -52,7 +52,7 @@ spec:
   authentication:
     type: tls
 ---
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaTopic
 metadata:
   name: connect-cluster-offsets
@@ -66,7 +66,7 @@ spec:
     retention.ms: "604800000"
     cleanup.policy: compact 
 ---
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaTopic
 metadata:
   name: connect-cluster-configs
@@ -80,7 +80,7 @@ spec:
     retention.ms: "604800000"
     cleanup.policy: compact 
 ---
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaTopic
 metadata:
   name: connect-cluster-status
@@ -94,7 +94,7 @@ spec:
     retention.ms: "604800000"
     cleanup.policy: compact
 ---
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaTopic
 metadata:
   # Topic names in Kubernetes are required to be in lowercase, and are case sensitive. The below
@@ -111,7 +111,7 @@ spec:
     retention.ms: "604800000"
     cleanup.policy: compact 
 ---
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaTopic
 metadata:
   name: outbox.unknown
@@ -125,7 +125,7 @@ spec:
     retention.ms: "604800000"
     cleanup.policy: compact 
 ---
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaTopic
 metadata:
   name: outbox.failed.events-dlt
@@ -139,7 +139,7 @@ spec:
     retention.ms: "604800000"
     cleanup.policy: compact 
 ---
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaConnect
 metadata:
   name: debezium-connect-cluster
@@ -239,7 +239,7 @@ spec:
   policyTypes:
     - Ingress
 ---
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaConnector
 metadata:
   name: outbox-connector

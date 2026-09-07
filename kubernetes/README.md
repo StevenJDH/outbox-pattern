@@ -19,12 +19,12 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
 
 ## Configuration steps
 
-1. Strimzi 0.45.0 or newer needs to be installed with a cluster called `my-strimzi-cluster` running at least 3 brokers. The Kafka resource must also be configured with an internal listener for port 9094 that has authentication type set to `tls` and supports `simple` authorization. Both, `CN=kafka-ui` and `CN=connect-cluster` users need to be add as super users to reduce complexity. The following commands provide a quick way to meet all of these requirements if needed.
+1. Strimzi 0.51.0 or newer needs to be installed with a cluster called `my-strimzi-cluster` running at least 3 brokers. The Kafka resource must also be configured with an internal listener for port 9094 that has authentication type set to `tls` and supports `simple` authorization. Both, `CN=kafka-ui` and `CN=connect-cluster` users need to be add as super users to reduce complexity. The following commands provide a quick way to meet all of these requirements if needed.
 
     ```bash
     helm repo add stevenjdh https://StevenJDH.github.io/helm-charts
     helm repo update
-    helm upgrade --install my-strimzi-cluster stevenjdh/strimzi-cluster --version 0.1.0 \
+    helm upgrade --install my-strimzi-cluster stevenjdh/strimzi-cluster --version 0.3.0 \
         -f ./config/strimzi/values.yaml \
         --namespace strimzi \
         --create-namespace \
@@ -34,7 +34,7 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
 2. Install the PostgreSQL database server.
 
     ```bash
-    helm upgrade --install my-postgresql oci://registry-1.docker.io/bitnamicharts/postgresql --version 18.8.0 \
+    helm upgrade --install my-postgresql oci://registry-1.docker.io/bitnamicharts/postgresql --version 18.9.0 \
         -f ./config/postgresql/values.yaml \
         --set-file "primary.initdb.scripts.init\.sql=../local/init.sql" \
         --namespace strimzi \
