@@ -28,7 +28,7 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
         -f ./config/strimzi/values.yaml \
         --namespace strimzi \
         --create-namespace \
-        --rollback-on-failure
+        [--rollback-on-failure | --atomic]
     ```
 
 2. Install the PostgreSQL database server.
@@ -38,7 +38,7 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
         -f ./config/postgresql/values.yaml \
         --set-file "primary.initdb.scripts.init\.sql=../local/init.sql" \
         --namespace strimzi \
-        --rollback-on-failure
+        [--rollback-on-failure | --atomic]
     ```
 
     Use something like [DBeaver Community](https://dbeaver.io/download/) to explore the `orders_db` database and for directly testing the `outbox_event` table using port forwarding, `kubectl port-forward svc/my-postgresql-hl 5432:5432 -n strimzi`.
@@ -122,7 +122,7 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
     helm upgrade --install kafka-ui kafbat/kafka-ui --version 1.6.4 \
         -f ./config/kafka-ui/values.yaml \
         --namespace strimzi \
-        --rollback-on-failure
+        [--rollback-on-failure | --atomic]
     ```
 
     Use port forwarding to access the UI, `kubectl port-forward svc/kafka-ui 8080:80 -n strimzi`.
