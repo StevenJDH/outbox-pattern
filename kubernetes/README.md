@@ -119,7 +119,7 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
     ```bash
     helm repo add kafbat https://kafbat.github.io/helm-charts
     helm repo update
-    helm upgrade --install kafka-ui kafbat/kafka-ui --version 1.6.4 \
+    helm upgrade --install kafka-ui kafbat/kafka-ui --version 1.6.5 \
         -f ./config/kafka-ui/values.yaml \
         --namespace strimzi \
         [--rollback-on-failure | --atomic]
