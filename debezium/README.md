@@ -14,24 +14,34 @@ As an alternative to loading connector plugins dynamically as seen in the [Kuber
 
 ## Build
 
-The following commands can help build and push the customized image to a container registry. Do keep in mind that, although this example uses the `latest-kafka-3.9.0` tag for the base image, in practice, it's better to use the more explicit `0.45.0-kafka-3.9.0` tag to avoid issues with the Strimzi Operator.
+The following commands can help build and push the customized image to a container registry. Do keep in mind that, although this example uses the `latest-kafka-4.3.1` tag for the base image, in practice, it's better to use the more explicit `1.2.0-kafka-4.3.1` tag to avoid issues with the Strimzi Operator.
 
 ```bash
-nerdctl/docker build -t debezium-connect . [--build-arg STRIMZI_VERSION=latest-kafka-3.9.0 --build-arg DEBEZIUM_CONNECTOR_VERSION=3.5.2.Final]
-nerdctl/docker tag debezium-connect:latest <my-container-registry>/debezium-connect:3.5.2.Final-kafka-3.9.0
-nerdctl/docker push <my-container-registry>/debezium-connect:3.5.2.Final-kafka-3.9.0
+nerdctl/docker build -t debezium-connect . [--build-arg STRIMZI_VERSION=latest-kafka-4.3.1 --build-arg DEBEZIUM_CONNECTOR_VERSION=3.6.2.Final --build-arg MAVEN_VERSION=3.9.16-eclipse-temurin-21]
+nerdctl/docker tag debezium-connect:latest <my-container-registry>/debezium-connect:3.6.2.Final-kafka-4.3.1
+nerdctl/docker push <my-container-registry>/debezium-connect:3.6.2.Final-kafka-4.3.1
 ```
 
 ## Confluent Schema Registry and Avro support
 By default, Kafka Connect does not include the Confluent dependencies required for integrating with the Schema Registry or for using Avro. This is particularly relevant when the SMT (EventRouter) is not used, as it allows direct use of the AvroConverter, since both features are mutually exclusive. The following steps describe how to build the `confluent-avro` plugin folder to add this support.
 
-1. From the same directory where the [pom.xml](./pom.xml) is located, run the below command. This process produces a similar result to the list found in the [Debezium documentation](https://debezium.io/documentation/reference/3.5/configuration/avro.html#deploying-confluent-schema-registry-with-debezium-containers), but in a more accurate way because dependencies can change from version to version.
+1. From the same directory where the [pom-confluent.xml](./pom-confluent.xml) is located, run the below command. This process produces a similar result to the list found in the [Debezium documentation](https://debezium.io/documentation/reference/3.5/configuration/avro.html#deploying-confluent-schema-registry-with-debezium-containers), but in a more accurate way because dependencies can change from version to version.
 
     ```bash
-    mvn dependency:copy-dependencies -DoutputDirectory=confluent-avro-7.9.5 -DconfluentVersion="7.9.5"
+    mvn -f ./pom-confluent.xml dependency:copy-dependencies \
+      -DoutputDirectory=confluent-avro-8.3.1 -DconfluentVersion="8.3.1"
     ```
 
-    📝 **Note:** The `-DconfluentVersion=7.9.5` flag is used to target a particular Schema Registry/[AvroConverter](https://mvnrepository.com/artifact/io.confluent/kafka-connect-avro-converter) version that is compatible with the Kafka version being used. See [Confluent Platform and Apache Kafka compatibility](https://docs.confluent.io/platform/current/installation/versions-interoperability.html#cp-and-apache-ak-compatibility) for the compatibility matrix.
+    <table>
+    <tr>
+    <td>
+
+    > [!NOTE]
+    > The `-DconfluentVersion=8.3.1` flag is used to target a particular Schema Registry/[AvroConverter](https://mvnrepository.com/artifact/io.confluent/kafka-connect-avro-converter) version that is compatible with the Kafka version being used. See [Confluent Platform and Apache Kafka compatibility](https://docs.confluent.io/platform/current/installation/versions-interoperability.html#cp-and-apache-ak-compatibility) for the compatibility matrix.
+
+    </td>
+    </tr>
+    </table>
 
 2. The `confluent-avro-x.x.x` plugin folder should have now been created. Keep the version number in the folder name as this will be important for supporting rolling updates.
 
@@ -40,7 +50,7 @@ By default, Kafka Connect does not include the Confluent dependencies required f
 4. Finally, update the KafkaConnector resource to use the AvroConverter class in a similar way as in the following example:
 
     ```yaml
-    apiVersion: kafka.strimzi.io/v1beta2
+    apiVersion: kafka.strimzi.io/v1
     kind: KafkaConnector
     metadata:
       name: outbox-connector
