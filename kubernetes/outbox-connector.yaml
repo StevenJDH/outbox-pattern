@@ -189,9 +189,21 @@ spec:
         - name: kafka-connect-plugins
           mountPath: /mnt/opt/kafka/plugins
       env:
-        - name: KAFKA_CONNECT_PLUGIN_PATH
-          # We are only allowed to mount under /mnt/, so kept the path similar to the default, /opt/kafka/plugins.
-          value: /mnt/opt/kafka/plugins
+        # Since Strimzi 0.46.0, KAFKA_CONNECT_PLUGIN_PATH=/mnt/opt/kafka/plugins no longer works because "Kafka Connect
+        # configuration [was moved] to the ConfigMap created by the operator." Also, changing 'plugin.path=/opt/kafka/plugins'
+        # in 'spec.config' is restricted. However, the mounted path can be added to the CLASSPATH, but this must be done for
+        # each plugin folder and subfolder if any.
+        #
+        # NOTE: Make sure to append after '/opt/kafka/libs/*' to give existing library versions priority and to avoid class
+        # not found or collision errors. Do select versions of a plugin that come close to key libraries in use, for example,
+        # debezium-connector-postgres depends on kafka-clients, so this version should come close to the version used by the
+        # cluster (e.g., 4.3.1).
+        #
+        # IMPORTANT: Versions after debezium-connector-postgres-3.5.2.Final seem to no longer include all transitive dependencies,
+        # so use included 'pom.xml' file and provide maven command to download all the required libraries. This will work consistently
+        # regardless of version.
+        - name: CLASSPATH
+          value: "/opt/kafka/libs/*:/mnt/opt/kafka/plugins/debezium-connector-postgres-3.5.2.Final/*"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
