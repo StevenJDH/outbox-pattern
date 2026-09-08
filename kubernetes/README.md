@@ -146,7 +146,7 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
         'OrderCreated',                               -- type
         '{"id": "99999", "status": "PLACED"}'::jsonb, -- payload (JSONB)
         'baggage=promo\\=12345,region\\=eu-west\r\n', -- tracing_span_context
-        now()                                         -- timestamp (can be omitted since DEFAULT is now())
+        now() AT TIME ZONE 'UTC'                      -- timestamp (can be omitted since DEFAULT is now())
     );
     ```
 
