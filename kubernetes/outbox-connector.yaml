@@ -152,6 +152,10 @@ metadata:
 spec:
   replicas: 1
   bootstrapServers: my-strimzi-cluster-kafka-bootstrap.strimzi.svc.cluster.local:9094
+  groupId: connect-cluster
+  configStorageTopic: connect-cluster-configs
+  offsetStorageTopic: connect-cluster-offsets
+  statusStorageTopic: connect-cluster-status
   tls:
     trustedCertificates:
       - secretName: my-strimzi-cluster-cluster-ca-cert
@@ -170,10 +174,6 @@ spec:
   config:
     config.providers: secrets
     config.providers.secrets.class: io.strimzi.kafka.KubernetesSecretConfigProvider
-    group.id: connect-cluster
-    offset.storage.topic: connect-cluster-offsets
-    config.storage.topic: connect-cluster-configs
-    status.storage.topic: connect-cluster-status
     # -1 means it will use the default replication factor configured in the broker.
     config.storage.replication.factor: -1
     offset.storage.replication.factor: -1
