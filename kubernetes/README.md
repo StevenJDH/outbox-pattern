@@ -9,10 +9,10 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
 
 ## Prerequisites
 
-* [Rancher Desktop](https://rancherdesktop.io) for running Kubernetes 1.25+ (depends on Strimzi version) locally.
+* [Rancher Desktop](https://rancherdesktop.io) for running Kubernetes 1.31+ (depends on Strimzi version) locally.
 * [Helm CLI](https://helm.sh/docs/intro/install/) 4.2+ installed.
 * [Kubectl CLI](https://kubernetes.io/docs/tasks/tools/#kubectl) installed and configured to access the cluster.
-* [Strimzi](https://artifacthub.io/packages/olm/community-operators/strimzi-kafka-operator) 0.45+ Helm Chart (version tested).
+* [Strimzi](https://artifacthub.io/packages/olm/community-operators/strimzi-kafka-operator) 1.2.0+ Helm Chart (version tested).
 * [Bitnami PostgreSQL](https://artifacthub.io/packages/helm/bitnami/postgresql) 18+ Helm Chart or equivalent.
 * [DBeaver Community](https://dbeaver.io) 25+ or equivalent tool for accessing PostgreSQL database.
 * A strong cup of coffee ☕😏.
@@ -43,47 +43,72 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
 
     Use something like [DBeaver Community](https://dbeaver.io/download/) to explore the `orders_db` database and for directly testing the `outbox_event` table using port forwarding, `kubectl port-forward svc/my-postgresql-hl 5432:5432 -n strimzi`.
 
-3. Download the [debezium-connector-postgres](https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/3.5.2.Final/debezium-connector-postgres-3.5.2.Final-plugin.tar.gz) plugin, and decompress its contents to a folder called `kafka-connect-plugins/debezium-connector-postgres-3.5.2.Final`. It is important to use the version number in the folder name to support rolling updates.
+3. Similar to the [Confluent Schema Registry and Avro support](../debezium/README.md#confluent-schema-registry-and-avro-support) process, run the below command to download the `debezium-connector-postgres` plugin and its dependencies. It is important to use the version number in the folder name to support rolling updates.
+
+    ```bash
+    # The '-DoutputDirectory' property requires an absolute path or it will output to the debezium folder.
+    mvn -f ../debezium/pom-debezium.xml dependency:copy-dependencies \
+        -DoutputDirectory=$PWD/kafka-connect-plugins/debezium-connector-postgres-3.6.2.Final \
+        -DdebeziumVersion="3.6.2.Final"
+    ```
+
+    The command above should have created the following structure:
 
     ```text
     kafka-connect-plugins/
-    └───debezium-connector-postgres-3.5.2.Final/
-            CHANGELOG.md
-            connect-api-4.1.2.jar
-            CONTRIBUTING.md
-            COPYRIGHT.txt
-            debezium-api-3.5.2.Final.jar
-            debezium-config-3.5.2.Final.jar
-            debezium-connect-plugins-3.5.2.Final.jar
-            debezium-connector-common-3.5.2.Final.jar
-            debezium-connector-postgres-3.5.2.Final.jar
-            debezium-openlineage-api-3.5.2.Final.jar
-            debezium-util-3.5.2.Final.jar
+    └───debezium-connector-postgres-3.6.2.Final/
+            checker-qual-3.55.1.jar
+            connect-api-4.3.0.jar
+            debezium-api-3.6.2.Final.jar
+            debezium-config-3.6.2.Final.jar
+            debezium-connect-plugins-3.6.2.Final.jar
+            debezium-connector-common-3.6.2.Final.jar
+            debezium-connector-postgres-3.6.2.Final.jar
+            debezium-openlineage-api-3.6.2.Final.jar
+            debezium-util-3.6.2.Final.jar
+            jackson-annotations-2.21.jar
+            jackson-core-2.21.2.jar
+            jackson-databind-2.21.2.jar
+            jackson-datatype-jsr310-2.21.2.jar
             jakarta.ws.rs-api-3.1.0.jar
-            kafka-clients-4.1.2.jar
-            LICENSE-3rd-PARTIES.txt
-            LICENSE.txt
-            lz4-java-1.10.1.jar
-            postgresql-42.7.7.jar
+            kafka-clients-4.3.0.jar
+            lz4-java-1.10.2.jar
+            postgresql-42.7.13.jar
             protobuf-java-3.25.5.jar
-            README.md
-            README_JA.md
-            README_KO.md
-            README_ZH.md
+            sketches-java-0.8.2.jar
             slf4j-api-1.7.36.jar
             snappy-java-1.1.10.7.jar
             zstd-jni-1.5.6-10.jar
     ```
 
-4. Move the extracted `kafka-connect-plugins` folder to `C:\Users\Public\Downloads` if using Windows. If using a different operating system, or a different path is preferred, then edit the `kafka-connect-plugins-pv` PersistentVolume resource in the `outbox-connector.yaml` file so that the `.spec.hostPath.path` property points to where the `kafka-connect-plugins` folder is located on the host machine. This path will be used for loading additional plugins with Connect. Use the following command to locate and verify the contents in that path if needed. For example, paths on Windows machines will start with `/mnt/c/` since Rancher Desktop is creating a bridge with the Windows filesystem to provide access. For macOS and Linux users, see [Volumes](https://docs.rancherdesktop.io/ui/preferences/virtual-machine/volumes) for more information.
+    <table>
+    <tr>
+    <td>
+
+    > [!NOTE]
+    > Versions after `debezium-connector-postgres-3.5.2.Final` seem to no longer include all transitive dependencies, so using a [download link](https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/3.6.2.Final/debezium-connector-postgres-3.6.2.Final-plugin.tar.gz) like that one is not enough. As such, the `pom-debezium.xml` approach will work reliably for any version. Also, the `-DdebeziumVersion="3.6.2.Final"` flag should target versions of the plugin that come close to key libraries in use. For example, `debezium-connector-postgres` depends on `kafka-clients`, so this dependency's version should come close to the version used by the cluster (e.g., 4.3.1). Likewise, when setting the `CLASSPATH` variable, make sure to append after '/opt/kafka/libs/*' to give existing library versions priority and to avoid class not found or collision errors. See the KafkaConnect resource comments in the `outbox-connector.yaml` file for more information.
+
+    </td>
+    </tr>
+    </table>
+
+4. Move the generated `kafka-connect-plugins` folder to `C:\Users\Public\Downloads` if using Windows. If using a different operating system, or a different path is preferred, then edit the `kafka-connect-plugins-pv` PersistentVolume resource in the `outbox-connector.yaml` file so that the `.spec.hostPath.path` property points to where the `kafka-connect-plugins` folder is located on the host machine. This path will be used for loading additional plugins with Connect. Use the following command to locate and verify the contents in that path if needed. For example, paths on Windows machines will start with `/mnt/c/` since Rancher Desktop is creating a bridge with the Windows filesystem to provide access. For macOS and Linux users, see [Volumes](https://docs.rancherdesktop.io/ui/preferences/virtual-machine/volumes) for more information.
 
     ```bash
     # Opens the Rancher Desktop shell environment.
     rdctl shell
     ```
 
-> [!NOTE]  
-> This step assumes Rancher Desktop is being used. If not, then configure the PersistentVolume to any other volume type desired just as long as the Connect plugin files can be added there.
+    <table>
+    <tr>
+    <td>
+
+    > [!NOTE]
+    > This step assumes Rancher Desktop is being used. If not, then configure the PersistentVolume to any other volume type desired just as long as the Connect plugin files can be added there.
+
+    </td>
+    </tr>
+    </table>
 
 5. Create the Connect and Connector resources along with other required resources to launch the main part of this setup.
 
@@ -111,8 +136,16 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
     kafkaconnector.kafka.strimzi.io/outbox-connector created
     ```
 
-> [!IMPORTANT]  
-> For Strimzi versions newer than 0.51.0, replace all instances of `v1beta2` with `v1` in the `outbox-connector.yaml` file before running the command above. This API version change is compatible with Strimzi 0.51.0 and later.
+    <table>
+    <tr>
+    <td>
+
+    > [!IMPORTANT]
+    > Resources created with the `outbox-connector.yaml` file require Strimzi 0.51.0 and later to work as they use the CRD v1 APIs from Strimzi.
+
+    </td>
+    </tr>
+    </table>
 
 6. Install kafbat/kafka-ui to make it easier to explore topics and connector resources.
 
@@ -146,12 +179,20 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
         'OrderCreated',                               -- type
         '{"id": "99999", "status": "PLACED"}'::jsonb, -- payload (JSONB)
         'baggage=promo\\=12345,region\\=eu-west\r\n', -- tracing_span_context
-        now() AT TIME ZONE 'UTC'                      -- timestamp (can be omitted since DEFAULT is now())
+        now() AT TIME ZONE 'UTC'                      -- timestamp (may cause error if omitted and not UTC)
     );
     ```
 
-> [!NOTE]  
-> This step assumes that the Kafka resource is configured with `auto.create.topics.enable` set to `false`, which requires pre-creating topics. This is generally a good idea as it will prevent race conditions between clients creating topics and topics being creating via CRDs.
+    <table>
+    <tr>
+    <td>
+
+    > [!NOTE]
+    > This step assumes that the Kafka resource is configured with `auto.create.topics.enable` set to `false`, which requires pre-creating topics. This is generally a good idea as it will prevent race conditions between clients creating topics and topics being creating via CRDs.
+
+    </td>
+    </tr>
+    </table>
 
 ## Contributing
 Thanks for your interest in contributing! There are many ways to contribute to this project. Get started [here](https://github.com/StevenJDH/.github/blob/main/docs/CONTRIBUTING.md).
