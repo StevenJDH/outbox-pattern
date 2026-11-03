@@ -6,7 +6,7 @@
 # https://opensource.org/licenses/MIT.
 
 ARG MAVEN_VERSION=3.9.16-eclipse-temurin-21
-# Release and changelog: https://debezium.io/releases/3.5/
+# Release and changelog: https://debezium.io/releases/3.6/
 ARG DEBEZIUM_CONNECTOR_VERSION=3.6.2.Final
 ARG STRIMZI_VERSION=latest-kafka-4.3.1
 
