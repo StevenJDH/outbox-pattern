@@ -7,7 +7,7 @@
 
 services:
   kafka:
-    image: confluentinc/cp-kafka:8.2.2 # Based on Kafka 4.2.x.
+    image: confluentinc/cp-kafka:8.3.1 # Based on Kafka 4.3.x.
     hostname: kafka
     user: root
     ports:
@@ -105,7 +105,7 @@ services:
       - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
 
   debezium-configurer:
-    image: curlimages/curl:8.21.0
+    image: curlimages/curl:8.23.0
     depends_on:
       postgres:
         condition: service_healthy
@@ -123,7 +123,7 @@ services:
       - ./init-connector.json:/init-connector.json
 
   schemaregistry:
-    image: confluentinc/cp-schema-registry:8.2.2
+    image: confluentinc/cp-schema-registry:8.3.1
     hostname: schemaregistry
     ports:
       - "8081:8081"
@@ -146,7 +146,7 @@ services:
       start_period: 20s
 
   # akhq:
-  #   image: tchiotludo/akhq:0.27.1
+  #   image: tchiotludo/akhq:0.28.0
   #   hostname: akhq
   #   ports:
   #     - "8080:8080"
@@ -219,7 +219,7 @@ services:
   
   # Used for OTLP → Collector → Zipkin to keep app OTLP-native and to support more backends.
   otel-collector:
-    image: otel/opentelemetry-collector:0.156.0
+    image: otel/opentelemetry-collector:0.164.0
     hostname: otel-collector
     ports:
       - "4317:4317" # OTLP/gRPC
@@ -233,7 +233,7 @@ services:
 
   # Health check done here because otel-collector does not have curl, wget, nc, or similar tools. 
   otel-collector-healthcheck:
-    image: nginx:1.30.4-alpine-slim
+    image: nginx:1.31.8-alpine-slim
     depends_on:
       - otel-collector
     healthcheck:
