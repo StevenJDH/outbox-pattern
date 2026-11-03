@@ -48,30 +48,30 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
     ```bash
     # The '-DoutputDirectory' property requires an absolute path or it will output to the debezium folder.
     mvn -f ../debezium/pom-debezium.xml dependency:copy-dependencies \
-        -DoutputDirectory=$PWD/kafka-connect-plugins/debezium-connector-postgres-3.6.2.Final \
-        -DdebeziumVersion="3.6.2.Final"
+        -DoutputDirectory=$PWD/kafka-connect-plugins/debezium-connector-postgres-3.7.0.Final \
+        -DdebeziumVersion="3.7.0.Final"
     ```
 
     The command above should have created the following structure:
 
     ```text
     kafka-connect-plugins/
-    └───debezium-connector-postgres-3.6.2.Final/
+    └───debezium-connector-postgres-3.7.0.Final/
             checker-qual-3.55.1.jar
-            connect-api-4.3.0.jar
-            debezium-api-3.6.2.Final.jar
-            debezium-config-3.6.2.Final.jar
-            debezium-connect-plugins-3.6.2.Final.jar
-            debezium-connector-common-3.6.2.Final.jar
-            debezium-connector-postgres-3.6.2.Final.jar
-            debezium-openlineage-api-3.6.2.Final.jar
-            debezium-util-3.6.2.Final.jar
+            connect-api-4.3.1.jar
+            debezium-api-3.7.0.Final.jar
+            debezium-config-3.7.0.Final.jar
+            debezium-connect-plugins-3.7.0.Final.jar
+            debezium-connector-common-3.7.0.Final.jar
+            debezium-connector-postgres-3.7.0.Final.jar
+            debezium-openlineage-api-3.7.0.Final.jar
+            debezium-util-3.7.0.Final.jar
             jackson-annotations-2.21.jar
             jackson-core-2.21.2.jar
             jackson-databind-2.21.2.jar
             jackson-datatype-jsr310-2.21.2.jar
             jakarta.ws.rs-api-3.1.0.jar
-            kafka-clients-4.3.0.jar
+            kafka-clients-4.3.1.jar
             lz4-java-1.10.2.jar
             postgresql-42.7.13.jar
             protobuf-java-3.25.5.jar
@@ -86,7 +86,7 @@ This guide provides step-by-step instructions for implementing the Outbox Patter
     <td>
 
     > [!NOTE]
-    > Versions after `debezium-connector-postgres-3.5.2.Final` seem to no longer include all transitive dependencies, so using a [download link](https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/3.6.2.Final/debezium-connector-postgres-3.6.2.Final-plugin.tar.gz) like that one is not enough. As such, the `pom-debezium.xml` approach will work reliably for any version. Also, the `-DdebeziumVersion="3.6.2.Final"` flag should target versions of the plugin that come close to key libraries in use. For example, `debezium-connector-postgres` depends on `kafka-clients`, so this dependency's version should come close to the version used by the cluster (e.g., 4.3.1). Likewise, when setting the `CLASSPATH` variable, make sure to append after '/opt/kafka/libs/*' to give existing library versions priority and to avoid class not found or collision errors. See the KafkaConnect resource comments in the `outbox-connector.yaml` file for more information.
+    > Versions after `debezium-connector-postgres-3.5.2.Final` seem to no longer include all transitive dependencies, so using a [download link](https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/3.7.0.Final/debezium-connector-postgres-3.7.0.Final-plugin.tar.gz) like that one is not enough. As such, the `pom-debezium.xml` approach will work reliably for any version. Also, the `-DdebeziumVersion="3.7.0.Final"` flag should target versions of the plugin that come close to key libraries in use. For example, `debezium-connector-postgres` depends on `kafka-clients`, so this dependency's version should come close to the version used by the cluster (e.g., 4.3.1). Likewise, when setting the `CLASSPATH` variable, make sure to append after '/opt/kafka/libs/*' to give existing library versions priority and to avoid class not found or collision errors. See the KafkaConnect resource comments in the `outbox-connector.yaml` file for more information.
 
     </td>
     </tr>

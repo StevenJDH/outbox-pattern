@@ -65,7 +65,7 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   debezium:
-    image: quay.io/debezium/connect:3.5.2.Final
+    image: quay.io/debezium/connect:3.7.0.Final
     hostname: debezium
     depends_on:
       kafka:
