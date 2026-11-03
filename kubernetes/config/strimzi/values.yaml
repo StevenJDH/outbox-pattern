@@ -13,3 +13,14 @@ nodePools:
   kraft-controller:
     annotations:
       strimzi.io/next-node-ids: "[10-19]"
+
+crds:
+  upgradeJob:
+    enabled: true
+  deleteJob:
+    enabled: true
+
+strimzi-drain-cleaner:
+  enabled: false
+  certManager:
+    create: false
