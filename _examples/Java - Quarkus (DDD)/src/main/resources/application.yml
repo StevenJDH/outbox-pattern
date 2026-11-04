@@ -15,6 +15,7 @@ quarkus:
     jdbc:
       url: jdbc:postgresql://localhost:5432/orders_db
   http:
+    host-enabled: true
     port: 9080
     access-log:
       enabled: false
@@ -119,6 +120,8 @@ quarkus:
         # is too much of a pain in Quarkus, and it has several limitations.
         enabled: true
         log-format: ecs
+        mdc:
+          flat-fields: true
         zone-id: UTC
         additional-field:
           project:

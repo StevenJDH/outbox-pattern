@@ -19,7 +19,7 @@
     <packaging>quarkus</packaging>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>25</java.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
@@ -30,14 +30,14 @@
         <skipITs>true</skipITs>
         <skipGitCommitId>false</skipGitCommitId>
         <!-- Dependency versions -->
-        <quarkus.platform.version>3.37.2</quarkus.platform.version>
+        <quarkus.platform.version>3.40.1.1</quarkus.platform.version>
         <mapstruct.version>1.6.3</mapstruct.version>
-        <hypersistence-utils.version>3.15.4</hypersistence-utils.version>
+        <hypersistence-utils.version>3.16.0</hypersistence-utils.version>
         <assertj-core.version>3.27.7</assertj-core.version>
         <!-- Plugin Versions -->
-        <compiler-plugin.version>3.15.0</compiler-plugin.version>
-        <surefire-plugin.version>3.5.6</surefire-plugin.version>
-        <git-commit-id.version>10.0.0</git-commit-id.version>
+        <compiler-plugin.version>3.16.0</compiler-plugin.version>
+        <surefire-plugin.version>3.6.1</surefire-plugin.version>
+        <git-commit-id.version>10.0.1</git-commit-id.version>
         <maven-enforcer.version>3.6.3</maven-enforcer.version>
     </properties>
 
@@ -50,13 +50,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
+            <!-- <dependency>
                 <groupId>io.quarkus.platform</groupId>
                 <artifactId>quarkus-debezium-bom</artifactId>
                 <version>${quarkus.platform.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
+            </dependency> -->
         </dependencies>
     </dependencyManagement>
 
@@ -72,6 +72,7 @@
         <dependency>
             <groupId>io.debezium</groupId>
             <artifactId>debezium-quarkus-outbox</artifactId>
+	        <version>3.7.0.Final</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -254,7 +255,7 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>[21.0,)</version>
+                                    <version>[25.0,)</version>
                                 </requireJavaVersion>
                                 <requireJavaVendor>
                                     <level>ERROR</level>

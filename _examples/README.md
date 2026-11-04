@@ -9,7 +9,7 @@ A collection of code examples that use the Outbox Pattern. The Spring Boot and Q
 
 ## Prerequisites
 
-* Java 21+ ([Temurin/Adopt](https://adoptium.net)) OpenJDK for compiling.
+* Java 25+ ([Temurin/Adopt](https://adoptium.net)) OpenJDK for compiling.
 * make CLI 3+ for convenience. Windows users can install from [here](https://gnuwin32.sourceforge.net/packages/make.htm), and add the bin folder to the system `PATH`.
 * Optional: [Docker](https://www.docker.com/products/docker-desktop)/[Rancher](https://rancherdesktop.io) Desktop for building containers.
 
