@@ -7,8 +7,8 @@ quarkus:
     jdbc:
       url: jdbc:h2:mem:orders_db;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
   hibernate-orm:
-    database:
-      generation: drop-and-create
+    schema-management:
+      strategy: drop-and-create
   http:
     # Set to 0 to make it random.
     test-port: 9090
