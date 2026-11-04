@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -61,7 +62,19 @@ public class GlobalExceptionHandler {
 
         return buildErrorResponse(status, message + ".", request);
     }
+    
+    @ExceptionHandler(ObjectRetrievalFailureException.class)
+    public ResponseEntity<ErrorResponseDTO> handleNoResourceFoundException(ObjectRetrievalFailureException ex,
+                                                                          HttpServletRequest request) {
+        
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        String message = ex.getMessage();
+        LOG.error("HTTP Code [{}] - {}: [{} {}]", status.value(), message,
+                request.getMethod(), request.getRequestURI());
 
+        return buildErrorResponse(status, message + ".", request);
+    }
+    
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponseDTO> handleIllegalArgumentException(IllegalArgumentException ex,
                                                                            HttpServletRequest request) {

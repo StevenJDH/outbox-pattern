@@ -11,6 +11,7 @@ package io.github.stevenjdh.examples.outboxpattern.exception;
 
 import io.github.stevenjdh.examples.outboxpattern.dto.response.ErrorResponseDTO;
 import jakarta.inject.Singleton;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.container.ContainerRequestContext;
@@ -40,6 +41,15 @@ public class GlobalExceptionHandler implements ExceptionMapper<Throwable> {
                 int statusCode = Response.Status.NOT_FOUND.getStatusCode();
                 String errorReason = Response.Status.NOT_FOUND.getReasonPhrase();
                 String message = "The requested resource was not found";
+                LOG.error("HTTP Code [{}] - {}: [{} {}]",
+                        statusCode, message, request.getMethod(), request.getUriInfo().getRequestUri().getPath());
+                
+                return buildErrorResponse(statusCode, errorReason, message + ".");
+            }
+            case EntityNotFoundException enfe -> {
+                int statusCode = Response.Status.NOT_FOUND.getStatusCode();
+                String errorReason = Response.Status.NOT_FOUND.getReasonPhrase();
+                String message = enfe.getMessage();
                 LOG.error("HTTP Code [{}] - {}: [{} {}]",
                         statusCode, message, request.getMethod(), request.getUriInfo().getRequestUri().getPath());
                 
