@@ -17,9 +17,10 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", imports = UUID.class, uses = {OrderPersistenceMapper.class})
+@Mapper(componentModel = SPRING, imports = UUID.class, uses = {OrderPersistenceMapper.class})
 public interface OrderItemPersistenceMapper {
 
     @Mapping(target = "id", expression = "java(UUID.randomUUID())")

@@ -16,8 +16,9 @@ import java.time.Instant;
 import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import static org.mapstruct.MappingConstants.ComponentModel.JAKARTA_CDI;
 
-@Mapper(componentModel = "cdi", imports = {UUID.class, Instant.class})
+@Mapper(componentModel = JAKARTA_CDI, imports = {UUID.class, Instant.class})
 public interface OrderDtoMapper {
 
     @Mapping(target = "id", expression = "java(UUID.randomUUID())")

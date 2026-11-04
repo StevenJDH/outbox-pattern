@@ -17,9 +17,10 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = SPRING)
 public interface OrderPersistenceMapper {
 
     @Mapping(target = "items", ignore = true)

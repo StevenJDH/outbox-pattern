@@ -50,13 +50,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- <dependency>
+            <dependency>
                 <groupId>io.quarkus.platform</groupId>
                 <artifactId>quarkus-debezium-bom</artifactId>
                 <version>${quarkus.platform.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency> -->
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -72,16 +72,20 @@
         <dependency>
             <groupId>io.debezium</groupId>
             <artifactId>debezium-quarkus-outbox</artifactId>
-	        <version>3.7.0.Final</version>
+            <!--
+                Workaround to override older version in BOM to include fix
+                https://github.com/debezium/debezium-quarkus/pull/70 for OTEL.
+            -->
+            <version>3.7.0.Final</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-orm-panache</artifactId>
         </dependency>
         <!-- 
-            Workaround. Not using hypersistence-utils-hibernate-73 for Hibernate 7.4 because
-            that uses Jackson 3x and Quarkus is still using 2x.
-          -->
+          Workaround. Not using hypersistence-utils-hibernate-73 for Hibernate 7.4 because
+          that uses Jackson 3x and Quarkus is still using 2x.
+        -->
         <dependency>
             <groupId>io.hypersistence</groupId>
             <artifactId>hypersistence-utils-hibernate-71</artifactId>
@@ -166,6 +170,13 @@
                 <artifactId>quarkus-maven-plugin</artifactId>
                 <version>${quarkus.platform.version}</version>
                 <extensions>true</extensions>
+                <configuration>
+                    <!--
+                        This removes unnamed module warnings from maven cli that
+                        appear with Java 25 until a fix covering them all is released.
+                    --> 
+                    <jvmArgs>--enable-native-access=ALL-UNNAMED</jvmArgs>
+                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -173,9 +184,23 @@
                 <configuration>
                     <parameters>true</parameters>
                     <release>${java.version}</release>
-                    <compilerArgument>-Xlint:unchecked</compilerArgument>
-                    <!-- Suppresses annotation processing warning message. -->
-                    <compilerArgument>-Xlint:-options</compilerArgument>
+                    <!-- 
+                        Since Java 23, the Java compiler no longer automatically
+                        discovers and runs annotation processors from the
+                        classpath by default, so we explictly reference mapstruct.
+                    -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                    <compilerArgs>
+                        <arg>-Xlint:unchecked</arg>
+                        <!-- Suppresses annotation processing warning message. -->
+                        <arg>-Xlint:-options</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
@@ -267,7 +292,7 @@
                                 </requireJavaVendor>
                                 <requireMavenVersion>
                                     <level>WARN</level>
-                                    <version>[3.9.5,)</version>
+                                    <version>[3.9.16,)</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>

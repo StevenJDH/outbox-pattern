@@ -118,9 +118,23 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <release>${java.version}</release>
-                    <compilerArgument>-Xlint:unchecked</compilerArgument>
-                    <!-- Suppresses annotation processing warning message. -->
-                    <compilerArgument>-Xlint:-options</compilerArgument>
+                    <!-- 
+                        Since Java 23, the Java compiler no longer automatically
+                        discovers and runs annotation processors from the
+                        classpath by default, so we explictly reference mapstruct.
+                    -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                    <compilerArgs>
+                        <arg>-Xlint:unchecked</arg>
+                        <!-- Suppresses annotation processing warning message. -->
+                        <arg>-Xlint:-options</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
@@ -179,7 +193,7 @@
                                 </requireJavaVendor>
                                 <requireMavenVersion>
                                     <level>WARN</level>
-                                    <version>[3.9.5,)</version>
+                                    <version>[3.9.16,)</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>

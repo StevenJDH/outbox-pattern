@@ -17,9 +17,10 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import static org.mapstruct.MappingConstants.ComponentModel.JAKARTA_CDI;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "cdi", imports = UUID.class, uses = {OrderPersistenceMapper.class})
+@Mapper(componentModel = JAKARTA_CDI, imports = UUID.class, uses = {OrderPersistenceMapper.class})
 public interface OrderItemPersistenceMapper {
 
     @Mapping(target = "id", expression = "java(UUID.randomUUID())")

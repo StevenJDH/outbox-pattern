@@ -16,8 +16,9 @@ import java.time.Instant;
 import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
-@Mapper(componentModel = "spring", imports = {UUID.class, Instant.class})
+@Mapper(componentModel = SPRING, imports = {UUID.class, Instant.class})
 public interface OrderDtoMapper {
 
     @Mapping(target = "id", expression = "java(UUID.randomUUID())")

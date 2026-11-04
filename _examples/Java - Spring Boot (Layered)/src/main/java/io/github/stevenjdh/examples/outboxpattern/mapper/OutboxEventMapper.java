@@ -16,9 +16,10 @@ import java.util.UUID;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 import tools.jackson.databind.ObjectMapper;
 
-@Mapper(componentModel = "spring", imports = UUID.class)
+@Mapper(componentModel = SPRING, imports = UUID.class)
 public interface OutboxEventMapper {
 
     @Mapping(target = "id", expression = "java(UUID.randomUUID())")

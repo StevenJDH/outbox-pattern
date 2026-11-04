@@ -17,9 +17,10 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import static org.mapstruct.MappingConstants.ComponentModel.JAKARTA_CDI;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "cdi")
+@Mapper(componentModel = JAKARTA_CDI)
 public interface OrderPersistenceMapper {
 
     @Mapping(target = "items", ignore = true)

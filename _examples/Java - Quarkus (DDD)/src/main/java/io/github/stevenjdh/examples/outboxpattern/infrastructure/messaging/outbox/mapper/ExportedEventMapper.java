@@ -15,8 +15,9 @@ import io.github.stevenjdh.examples.outboxpattern.infrastructure.messaging.outbo
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import static org.mapstruct.MappingConstants.ComponentModel.JAKARTA_CDI;
 
-@Mapper(componentModel = "cdi")
+@Mapper(componentModel = JAKARTA_CDI)
 public interface ExportedEventMapper {
 
     // aggregateType value should be lowercase to support lowercase naming in Kubernetes for topic resouces.
