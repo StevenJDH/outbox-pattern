@@ -73,7 +73,7 @@
             <groupId>io.debezium</groupId>
             <artifactId>debezium-quarkus-outbox</artifactId>
             <!--
-                Workaround to override older version in BOM to include fix
+                Workaround. Overrides older version in BOM to include fix
                 https://github.com/debezium/debezium-quarkus/pull/70 for OTEL.
             -->
             <version>3.7.0.Final</version>
@@ -83,8 +83,8 @@
             <artifactId>quarkus-hibernate-orm-panache</artifactId>
         </dependency>
         <!-- 
-          Workaround. Not using hypersistence-utils-hibernate-73 for Hibernate 7.4 because
-          that uses Jackson 3x and Quarkus is still using 2x.
+            Workaround. Not using hypersistence-utils-hibernate-73 for Hibernate 7.4 because
+            that uses Jackson 3x and Quarkus is still using 2x.
         -->
         <dependency>
             <groupId>io.hypersistence</groupId>
@@ -172,7 +172,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <!--
-                        This removes unnamed module warnings from maven cli that
+                        Workaround. Removes unnamed module warnings from maven cli that
                         appear with Java 25 until a fix covering them all is released.
                     --> 
                     <jvmArgs>--enable-native-access=ALL-UNNAMED</jvmArgs>
