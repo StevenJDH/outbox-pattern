@@ -7,13 +7,13 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package io.github.stevenjdh.examples.outboxpattern.repository;
+package io.github.stevenjdh.examples.outboxpattern.infrastructure.persistence.repository;
 
-import io.github.stevenjdh.examples.outboxpattern.repository.entity.OrderEntity;
+import io.github.stevenjdh.examples.outboxpattern.infrastructure.persistence.entity.OrderEntity;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class OrderPancheRepository implements PanacheRepository<OrderEntity> {
+public class OrderPanacheRepository implements PanacheRepository<OrderEntity> {
     
 }

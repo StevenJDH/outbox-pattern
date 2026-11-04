@@ -15,7 +15,7 @@ import io.github.stevenjdh.examples.outboxpattern.mapper.OrderItemPersistenceMap
 import io.github.stevenjdh.examples.outboxpattern.mapper.OrderPersistenceMapper;
 import io.github.stevenjdh.examples.outboxpattern.model.Order;
 import io.github.stevenjdh.examples.outboxpattern.pagination.PagedResult;
-import io.github.stevenjdh.examples.outboxpattern.repository.OrderPancheRepository;
+import io.github.stevenjdh.examples.outboxpattern.repository.OrderPanacheRepository;
 import io.github.stevenjdh.examples.outboxpattern.repository.entity.CustomerEntity;
 import io.github.stevenjdh.examples.outboxpattern.repository.entity.OrderEntity;
 import io.micrometer.core.annotation.Timed;
@@ -30,14 +30,14 @@ import org.slf4j.LoggerFactory;
 @ApplicationScoped
 public class OrderService {
 
-    private final OrderPancheRepository repository;
+    private final OrderPanacheRepository repository;
     private final OutboxEventPublisher outboxEventPublisher;
     private final OrderPersistenceMapper orderMapper;
     private final OrderItemPersistenceMapper itemMapper;
     private final EntityManager em;
     private static final Logger LOG = LoggerFactory.getLogger(OrderService.class.getName()); 
 
-    public OrderService(OrderPancheRepository repository,
+    public OrderService(OrderPanacheRepository repository,
                         OutboxEventPublisher outboxEventPublisher,
                         OrderPersistenceMapper orderMapper,
                         OrderItemPersistenceMapper itemMapper,

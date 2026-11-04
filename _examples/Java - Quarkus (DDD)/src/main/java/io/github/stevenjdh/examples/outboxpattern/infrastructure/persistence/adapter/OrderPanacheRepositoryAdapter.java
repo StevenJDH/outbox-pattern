@@ -16,7 +16,7 @@ import io.github.stevenjdh.examples.outboxpattern.infrastructure.persistence.ent
 import io.github.stevenjdh.examples.outboxpattern.infrastructure.persistence.factory.PagedResultFactory;
 import io.github.stevenjdh.examples.outboxpattern.infrastructure.persistence.mapper.OrderItemPersistenceMapper;
 import io.github.stevenjdh.examples.outboxpattern.infrastructure.persistence.mapper.OrderPersistenceMapper;
-import io.github.stevenjdh.examples.outboxpattern.infrastructure.persistence.repository.OrderPancheRepository;
+import io.github.stevenjdh.examples.outboxpattern.infrastructure.persistence.repository.OrderPanacheRepository;
 import io.github.stevenjdh.examples.outboxpattern.shared.pagination.PagedResult;
 import io.micrometer.core.annotation.Timed;
 import io.quarkus.panache.common.Page;
@@ -25,15 +25,15 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 
 @ApplicationScoped
-public class OrderPancheRepositoryAdapter implements OrderRepository  {
+public class OrderPanacheRepositoryAdapter implements OrderRepository  {
 
-    private final OrderPancheRepository repository;
+    private final OrderPanacheRepository repository;
     private final OrderPersistenceMapper orderMapper;
     private final OrderItemPersistenceMapper itemMapper;
     private final EntityManager em;
 
     @Inject
-    public OrderPancheRepositoryAdapter(OrderPancheRepository repository,
+    public OrderPanacheRepositoryAdapter(OrderPanacheRepository repository,
                                         OrderPersistenceMapper orderMapper,
                                         OrderItemPersistenceMapper itemMapper,
                                         EntityManager em) {
