@@ -40,7 +40,7 @@ jobs:
 
       - name: Generate Git Properties
         working-directory: "./_examples/Java - Quarkus (DDD)"
-        run: ./mvnw git-commit-id:revision
+        run: chmod +x ./mvnw && ./mvnw git-commit-id:revision
 
       - name: Generate Docker Metadata
         id: meta
