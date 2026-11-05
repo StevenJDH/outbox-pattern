@@ -13,10 +13,14 @@ import io.github.stevenjdh.examples.outboxpattern.api.rest.dto.response.ErrorRes
 import io.github.stevenjdh.examples.outboxpattern.domain.order.aggregate.OrderAggregate;
 import io.github.stevenjdh.examples.outboxpattern.domain.order.entity.Customer;
 import io.github.stevenjdh.examples.outboxpattern.domain.order.value.OrderItem;
+import io.github.stevenjdh.examples.outboxpattern.domain.shared.base.BaseAggregateRoot;
+import io.github.stevenjdh.examples.outboxpattern.domain.shared.base.BaseEntity;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 @RegisterForReflection(
     targets = {
+        BaseAggregateRoot.class,
+        BaseEntity.class,
         OrderAggregate.class,
         Customer.class,
         OrderItem.class,
