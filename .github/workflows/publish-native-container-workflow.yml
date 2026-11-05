@@ -1,6 +1,9 @@
 name: publish
 
 on:
+  push:
+    branches:
+      - feature/upgrade_components
   workflow_dispatch:
     inputs:
       reason:
