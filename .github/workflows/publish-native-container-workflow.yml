@@ -1,0 +1,69 @@
+name: publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'The reason for running the workflow.'
+        required: true
+        default: 'Manual publishing run'
+
+# Will cancel any in-progress runs of this workflow if a new run is triggered.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  build_and_push:
+    name: Publish Native Image
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Disabling shallow clone is recommended for improving relevancy.
+          fetch-depth: 0
+
+      - name: Install Temurin OpenJDK
+        uses: actions/setup-java@v6
+        with:
+          java-version: 25
+          distribution: 'temurin'
+          architecture: x64
+
+      - name: Generate Git Properties
+        working-directory: "./_examples/Java - Quarkus (DDD)"
+        run: ./mvnw git-commit-id:revision
+
+      - name: Generate Docker Metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: |
+            ghcr.io/${{ github.repository }},enable=true
+          tags: |
+            type=ref,event=branch
+            type=sha
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Login to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build, Tag, and Push Image
+        uses: docker/build-push-action@v7
+        with:
+          context: "./_examples/Java - Quarkus (DDD)"
+          file: "./_examples/Java - Quarkus (DDD)/src/main/docker/Dockerfile.native-micro-multistage"
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+        env:
+          DOCKER_BUILD_SUMMARY: true
