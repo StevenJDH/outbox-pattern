@@ -1,5 +1,6 @@
 # Outbox Pattern :: Examples
 
+[![publish](https://github.com/StevenJDH/outbox-pattern/actions/workflows/publish-native-container-workflow.yml/badge.svg)](https://github.com/StevenJDH/outbox-pattern/pkgs/container/outbox-pattern)
 ![Maintenance](https://img.shields.io/badge/yes-4FCA21?label=maintained&style=flat)
 ![GitHub](https://img.shields.io/github/license/StevenJDH/outbox-pattern)
 
