@@ -37,6 +37,7 @@ jobs:
 
       - name: Generate Git Properties
         working-directory: "./_examples/Java - Quarkus (DDD)"
+        # Add executable bit with 'git update-index --chmod=+x "./mvnw"', or replace first command below with 'sh' to avoid dirty commit in git properties.
         run: chmod +x ./mvnw && ./mvnw git-commit-id:revision
         env:
           # Reduce Maven console verbosity while preserving warnings and errors.
