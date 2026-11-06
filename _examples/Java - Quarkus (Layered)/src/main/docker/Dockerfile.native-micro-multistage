@@ -27,6 +27,9 @@
 
 ## Stage 1 : build with maven builder image with native capabilities.
 FROM quay.io/quarkus/ubi-quarkus-graalvmce-builder-image:jdk-25 AS build
+# Reduce Maven console verbosity while preserving warnings and errors.
+ENV MAVEN_OPTS="-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN" \
+    MAVEN_ARGS="--batch-mode --errors --fail-at-end --show-version -Dstyle.color=always"
 COPY --chown=quarkus:quarkus mvnw /code/mvnw
 COPY --chown=quarkus:quarkus .mvn /code/.mvn
 COPY --chown=quarkus:quarkus pom.xml /code/
