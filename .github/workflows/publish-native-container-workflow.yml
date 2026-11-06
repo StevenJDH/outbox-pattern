@@ -1,9 +1,6 @@
 name: publish
 
 on:
-  push:
-    branches:
-      - feature/upgrade_components
   workflow_dispatch:
     inputs:
       reason:
@@ -41,6 +38,10 @@ jobs:
       - name: Generate Git Properties
         working-directory: "./_examples/Java - Quarkus (DDD)"
         run: chmod +x ./mvnw && ./mvnw git-commit-id:revision
+        env:
+          # Reduce Maven console verbosity while preserving warnings and errors.
+          MAVEN_OPTS: "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN"
+          MAVEN_ARGS: "--batch-mode --errors --fail-at-end --show-version -Dstyle.color=always"
 
       - name: Generate Docker Metadata
         id: meta
