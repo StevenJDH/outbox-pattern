@@ -44,6 +44,7 @@ services:
 
   postgres:
     image: quay.io/debezium/postgres:18-alpine
+    pull_policy: always
     hostname: postgres
     ports:
       - "5432:5432"
@@ -255,6 +256,7 @@ services:
   # rest-example:
   #   # Use 'stevenjdh/outbox-pattern:latest` for locally built images.
   #   image: ghcr.io/stevenjdh/outbox-pattern:latest
+  #   pull_policy: always
   #   depends_on:
   #     postgres:
   #       condition: service_healthy
