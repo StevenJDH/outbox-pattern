@@ -20,7 +20,7 @@ From the root of this repository, run the following commands:
 
 ```bash
 make start [app=quarkus] # Default is Spring Boot.
-make logs [name=<kafka|postgres|debezium|debezium-configurer|schemaregistry|akhq|kafka-ui|zipkin|otel-collector|outbox-pattern>]
+make logs [name=<kafka|postgres|debezium|debezium-configurer|schemaregistry|akhq|kafka-ui|zipkin|otel-collector|rest-example>]
 make run # Runs one of the examples.
 make stop # Or 'make clean' to stop and remove image cache used.
 ```
@@ -29,7 +29,7 @@ make stop # Or 'make clean' to stop and remove image cache used.
 
 ```bash
 docker-compose up -d
-docker-compose logs [kafka|postgres|debezium|debezium-configurer|kafka-ui|zipkin|otel-collector|outbox-pattern]
+docker-compose logs [kafka|postgres|debezium|debezium-configurer|kafka-ui|zipkin|otel-collector|rest-example]
 pushd ../_examples/<example>/
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
 popd # Pops back to the local folder.

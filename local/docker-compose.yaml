@@ -252,8 +252,9 @@ services:
       timeout: 5s
       retries: 12
 
-  # outbox-pattern:
-  #   image: stevenjdh/outbox-pattern
+  # rest-example:
+  #   # Use 'stevenjdh/outbox-pattern:latest` for locally built images.
+  #   image: ghcr.io/stevenjdh/outbox-pattern:latest
   #   depends_on:
   #     postgres:
   #       condition: service_healthy
@@ -269,6 +270,21 @@ services:
   #     QUARKUS_DATASOURCE_USERNAME: postgres
   #     QUARKUS_DATASOURCE_PASSWORD: password
   #     QUARKUS_OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+  #   healthcheck:
+  #     test:
+  #       - CMD
+  #       - bash
+  #       - -c
+  #       - |
+  #         exec 3<>/dev/tcp/127.0.0.1/9081 || exit 1
+  #         printf 'GET /management/health/readiness HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 || exit 1
+  #         IFS= read -r -t 3 status <&3 || exit 1
+  #         [[ "$$status" == HTTP/*" 200 "* ]]
+  #     interval: 5s
+  #     timeout: 2s
+  #     retries: 3
+  #     start_period: 3s
+  #     start_interval: 1s
 
 volumes:
   kafka_data:
